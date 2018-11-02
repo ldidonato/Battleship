@@ -1,15 +1,82 @@
+<html>
+  <head>
+    <title>test</title>
+    <script src="http://code.jquery.com/jquery-latest.js">
+    </script>
+    <script>
+	$(document).ready(function(){
+		getTurn();
+		getChat();
+     });
+	 
+	 ///////////////////////////////
+	 //game stuff
+	 ///////////////////////////////
+	 
+	 //getTurn()
+	 //sent in: myID | gameID
+	 function getTurn(){
+		//create an ajax call
+		//what do I need?
+		MyXHR('get',{method:"checkTurn",a:"game",data:"45|55"}).done(function(json){
+			$('#turn').html('Your turn: '+json[0].turn);
+			//do I need to check again?
+			if(json[0].turn != 'true') setTimeout(getTurn, 2000);
+		});		
+		
+	 }
+	 
+	 
+	 
+	 
+	 ///////////////////////////////
+	 //chat stuff
+	 ///////////////////////////////
+	 function getChat(){
+		MyXHR('get',{method:'getChat',a:'chat'}).done(function(json){
+			console.log(json);
+		});
+	 }
+	 
+	 ///////////////////////////////
+	 //utility stuff
+	 ///////////////////////////////
+	 //MyXHR() - method to call the mid.php file...
+	 //		getPost - get or post
+	 //		d - data, looks like {name:value;name2:val2;...}
+	 //		id - id of the parent for the spinner...
+	 function MyXHR(getPost,d,id){
+		//ajax shortcut
+		return $.ajax({
+			type: getPost,
+			async: true,
+			cache: false,
+			url: 'mid.php',
+			data:d,
+			dataType:'json',
+			beforeSend:function(){
+				//turn on spinner if I have one 
+				if(id){
+					$(id).append('<img src="path/spinner.gif" class="awesome"/>');
+				}
+			}
+		}).always(function(){
+			//kill spinner
+			if(id){
+				$(id).find('.awesome').fadeOut(4000,function(){
+					$(this).remove();
+				});
+			}
+		}).fail(function(err){
+			console.log(err);
+		});
+	 }
+     
+    </script>
+  </head>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <title>Battleship</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
-
-</head>
-<body>
-
-test
-    
-</body>
+  <body>
+    <h5></h5>
+    <div id="turn">Your turn:</div>
+  </body>
 </html>

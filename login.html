@@ -1,0 +1,116 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Battleship</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+    <div id="loginBox" class="center">
+        <h2 class="text-center">Battleship</h2>
+        <h3 class="text-center">Login</h3><br>
+        <div class="container">
+          <form class="form-horizontal" action="/action_page.php">
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="email">Email:</label>
+              <div class="col-sm-10">
+                <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="pwd">Password:</label>
+              <div class="col-sm-10">          
+                <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pwd">
+              </div>
+            </div>
+            <div class="form-group">        
+              <div class="text-center">
+                <button type="submit" class="btn btn-default">Login</button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <br>
+        <p class="text-center">Don't have an account?<br>
+            <a href="#">Create Account</a></p>
+    </div>
+    
+</body>
+</html>
+<script>
+	$(document).ready(function(){
+		getTurn();
+		getChat();
+     });
+	 
+	 ///////////////////////////////
+	 //game stuff
+	 ///////////////////////////////
+	 
+	 //getTurn()
+	 //sent in: myID | gameID
+	 function getTurn(){
+		//create an ajax call
+		//what do I need?
+		MyXHR('get',{method:"checkTurn",a:"game",data:"45|55"}).done(function(json){
+			$('#turn').html('Your turn: '+json[0].turn);
+			//do I need to check again?
+			if(json[0].turn != 'true') setTimeout(getTurn, 2000);
+		});		
+		
+	 }
+	 
+	 
+	 
+	 
+	 ///////////////////////////////
+	 //chat stuff
+	 ///////////////////////////////
+	 function getChat(){
+		MyXHR('get',{method:'getChat',a:'chat'}).done(function(json){
+			console.log(json);
+		});
+	 }
+	 
+	 ///////////////////////////////
+	 //utility stuff
+	 ///////////////////////////////
+	 //MyXHR() - method to call the mid.php file...
+	 //		getPost - get or post
+	 //		d - data, looks like {name:value;name2:val2;...}
+	 //		id - id of the parent for the spinner...
+	 function MyXHR(getPost,d,id){
+		//ajax shortcut
+		return $.ajax({
+			type: getPost,
+			async: true,
+			cache: false,
+			url: 'mid.php',
+			data:d,
+			dataType:'json',
+			beforeSend:function(){
+				//turn on spinner if I have one 
+				if(id){
+					$(id).append('<img src="assets/spinner.gif" class="spinner"/>');
+				}
+			}
+		}).always(function(){
+			//kill spinner
+			if(id){
+				$(id).find('.spinner').fadeOut(4000,function(){
+					$(this).remove();
+				});
+			}
+		}).fail(function(err){
+			console.log(err);
+		});
+	 }    
+</script>
