@@ -37,6 +37,20 @@
 			console.log(json);
 		});
 	 }
+    function sayChat(){
+		MyXHR('get',{method:'sayChat',a:'chat',data:{username:dan,message:"howdy pard"}).done(function(json){
+			console.log(json);
+		});
+	 }
+        
+    ///////////////////////////////
+	 //login stuff
+	 ///////////////////////////////
+	 function doLogin(){
+		/*MyXHR('get',{method:'doLogin',a:'chat',data:{username:dan,message:"howdy pard"}).done(function(json){
+			console.log(json);
+		});*/
+	 }
 	 
 	 ///////////////////////////////
 	 //utility stuff

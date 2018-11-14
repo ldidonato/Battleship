@@ -1,12 +1,12 @@
 <?php
 	//include dbInfo
-	require_once("../../dbInfoPS.inc");
+	require_once("DB.class.php");
 	//include exceptions
 	require_once('./BizDataLayer/exception.php');
 	
-	function getChatData(){
+	function getLoginData(){
 		global $conn; //I have to pull in the defined variable $conn to get it in the function scope...
-		$sql = "Select * from 546ArchChat";
+		$sql = "Select * from BattleshipLogin";
 		try{
 			if($stmt=$conn->prepare($sql)){
 				echo returnJson($stmt);
@@ -20,11 +20,6 @@
 		}
 	}
 
-    function sayChatData(who,whatSaid){
-        //put into db, then
-        
-        //call getChatData
-    }
 	
 
 

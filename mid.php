@@ -7,7 +7,7 @@
 	
 	
 	if(isset($_GET['method']) || isset($_POST['method'])){
-		foreach( glob("./svcLayer/".$_REQUEST['a']."*.php") as $filename){
+		foreach( glob("./svcLayer/".$_REQUEST['a']."/*.php") as $filename){
 			require $filename;
 		}
 		//I have loaded all of the scripts in the 'a' (area)

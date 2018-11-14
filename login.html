@@ -41,6 +41,7 @@
         <br>
         <p class="text-center">Don't have an account?<br>
             <a href="#">Create Account</a></p>
+        <button onclick="login()">Click me</button>
     </div>
     
 </body>
@@ -76,6 +77,15 @@
 	 ///////////////////////////////
 	 function getChat(){
 		MyXHR('get',{method:'getChat',a:'chat'}).done(function(json){
+			console.log(json);
+		});
+	 }
+    
+    ///////////////////////////////
+	 //login stuff
+	 ///////////////////////////////
+	 function login(){
+		MyXHR('get',{method:'doLogin',a:'login',uname:'lauren',pass:'pass'}).done(function(json){
 			console.log(json);
 		});
 	 }

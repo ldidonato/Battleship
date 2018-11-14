@@ -10,4 +10,14 @@ include('BizDataLayer/chatData.php');
 		echo(getChatData());
 	}
 
+    function sayChat(d){
+        //should I be able to say this?
+        
+        //prep the data
+        //split data {username:dan,message:"howdy pard"}
+        
+        
+        echo(sayChatData(d['username'],d['message']));
+    }
+
 ?>
