@@ -1,24 +1,26 @@
 <?php
 	//include dbInfo
-	require_once("DB.class.php");
+	//require_once("DB.class.php");
 	//include exceptions
 	require_once('./BizDataLayer/exception.php');
 	
-	function getLoginData(){
-		global $conn; //I have to pull in the defined variable $conn to get it in the function scope...
-		$sql = "Select * from BattleshipLogin";
-		try{
-			if($stmt=$conn->prepare($sql)){
-				echo returnJson($stmt);
-				$stmt->close();
-				$conn->close();
-			}else if(!$data){
-				throw new Exception("an error occured in the db hookup");
-			}
-		}catch(Exception $e){
-		
-		}
-	}
+	function getLoginData($email){
+        global $mysqli;
+        $sql="SELECT password FROM BattleshipLogin WHERE email=?";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("i",$email);
+                $data=returnJson($stmt);
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while checking turn");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
 
 	
 

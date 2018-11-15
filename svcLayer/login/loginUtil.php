@@ -1,14 +1,20 @@
 <?php
 
-//go to the data layer and actually get the data I want
-include('BizDataLayer/loginData.php');
+    //go to the data layer and actually get the data I want
+    require "./BizDataLayer/loginData.php";
 
-	function doLogin(){
-		//should they be here?
-		//no data to prep
-		
-		echo(getLoginData());
-	}
+    $mysqli=new mysqli("localhost","lad4284","withkentucky",'lad4284');             
+    if(mysqli_connect_errno()){
+        printf("connection failed: ",mysqli_connect_errno());
+        exit();
+    }
+
+    function doLogin($d){
+        //should they be here?
+        //no data to prep
+
+        echo(getLoginData($d));
+    }
 
 
 ?>
