@@ -11,9 +11,17 @@
 
     function doLogin($d){
         //should they be here?
-        //no data to prep
-
-        echo(getLoginData($d));
+        ///email|password
+        $dataArr = explode("|",$d);
+        $response = getLoginData($dataArr[0],$dataArr[1]);
+        
+        if($response === 'null'){
+            echo("Login Failed");
+        }else{
+            echo("Login Success");
+        }
+       
+        
     }
 
 

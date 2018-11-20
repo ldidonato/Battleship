@@ -4,17 +4,17 @@
 	//include exceptions
 	require_once('./BizDataLayer/exception.php');
 	
-	function getLoginData($email){
+	function getLoginData($email,$pass){
         global $mysqli;
-        $sql="SELECT password FROM BattleshipLogin WHERE email=?";
+        $sql="SELECT * FROM BattleshipLogin WHERE email=? AND password=?";
         try{
             if($stmt=$mysqli->prepare($sql)){
-                $stmt->bind_param("i",$email);
+                $stmt->bind_param("ss",$email,$pass);
                 $data=returnJson($stmt);
                 $mysqli->close();
                 return $data;
             }else{
-                throw new Exception("An error occurred while checking turn");
+                throw new Exception("An error occurred while getting login data");
             }
         }catch (Exception $e) {
             log_error($e, $sql, null);

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,7 +40,6 @@
         <br>
         <p class="text-center">Don't have an account?<br>
             <a href="#">Create Account</a></p>
-        <button onclick="login()">Login</button>
     </div>
     
 </body>
@@ -83,8 +81,9 @@
 	 ///////////////////////////////
 	 function login(){
         var email = document.getElementById('email').value;
+        email += "|"+document.getElementById('pwd').value;
          
-		MyXHR('get',{method:'doLogin',a:'login',data:'dan'}).done(function(json){
+		MyXHR('get',{method:'doLogin',a:'login',data:email}).done(function(json){
 			console.log(json);
 		});
 	 }
