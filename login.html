@@ -45,37 +45,6 @@
 </body>
 </html>
 <script>
-	/*$(document).ready(function(){
-		getTurn();
-		getChat();
-     });
-	 
-	 ///////////////////////////////
-	 //game stuff
-	 ///////////////////////////////
-	 
-	 //getTurn()
-	 //sent in: myID | gameID
-	 function getTurn(){
-		//create an ajax call
-		//what do I need?
-		MyXHR('get',{method:"checkTurn",a:"game",data:"45|55"}).done(function(json){
-			$('#turn').html('Your turn: '+json[0].turn);
-			//do I need to check again?
-			if(json[0].turn != 'true') setTimeout(getTurn, 2000);
-		});		
-		
-	 }
-	 
-	 ///////////////////////////////
-	 //chat stuff
-	 ///////////////////////////////
-	 function getChat(){
-		MyXHR('get',{method:'getChat',a:'chat'}).done(function(json){
-			console.log(json);
-		});
-	 }
-    */
     ///////////////////////////////
 	 //login stuff
 	 ///////////////////////////////
@@ -83,8 +52,13 @@
         var email = document.getElementById('email').value;
         email += "|"+document.getElementById('pwd').value;
          
-		MyXHR('get',{method:'doLogin',a:'login',data:email}).done(function(json){
-			console.log(json);
+		MyXHR('get',{method:'doLogin',a:'login',data:email}).done(function(ok){
+            if(ok == "Login Success"){
+                MyXHR('get',{method:'startSession',a:'login',data:document.getElementById('email').value}).done(function(json){
+                    console.log(json);
+                    window.location.href = "/~lad4284/442/Battleship/index.html";
+                });
+            }
 		});
 	 }
 	 
@@ -103,7 +77,6 @@
 			cache: false,
 			url: 'mid.php',
 			data:d,
-			dataType:'json',
 			beforeSend:function(){
 				//turn on spinner if I have one 
 				if(id){
@@ -118,6 +91,7 @@
 				});
 			}
 		}).fail(function(err){
+            console.log('from error');
 			console.log(err);
 		});
 	 }    

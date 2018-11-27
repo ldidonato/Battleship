@@ -16,12 +16,27 @@
         $response = getLoginData($dataArr[0],$dataArr[1]);
         
         if($response === 'null'){
-            echo("Login Failed");
+            echo("Login Fail");
         }else{
             echo("Login Success");
         }
        
         
+    }
+    
+    function startSession($d){
+        session_start();
+        $_SESSION["id"] = $d;
+        echo($_SESSION["id"]);
+    }
+
+    function checkSession(){
+        session_start();
+        if(isset($_SESSION["id"])) {
+            echo("true");
+        }else{
+            echo("false");
+        }
     }
 
 

@@ -1,37 +1,18 @@
+
+
 <html>
   <head>
     <title>test</title>
     <script src="http://code.jquery.com/jquery-latest.js">
     </script>
     <script>
-	$(document).ready(function(){
-		getTurn();
-		getChat();
-     });
-	 
-	 ///////////////////////////////
-	 //game stuff
-	 ///////////////////////////////
-	 
-	 //getTurn()
-	 //sent in: myID | gameID
-	 function getTurn(){
-		//create an ajax call
-		//what do I need?
-		MyXHR('get',{method:"checkTurn",a:"game",data:"45|55"}).done(function(json){
-			$('#turn').html('Your turn: '+json[0].turn);
-			//do I need to check again?
-			if(json[0].turn != 'true') setTimeout(getTurn, 2000);
-		});		
-		
-	 }
-	 
 	 
 	 
 	 
 	 ///////////////////////////////
 	 //chat stuff
 	 ///////////////////////////////
+        /*
 	 function getChat(){
 		MyXHR('get',{method:'getChat',a:'chat'}).done(function(json){
 			console.log(json);
@@ -42,15 +23,17 @@
 			console.log(json);
 		});
 	 }
+        */
         
-    ///////////////////////////////
-	 //login stuff
-	 ///////////////////////////////
-	 function doLogin(){
-		/*MyXHR('get',{method:'doLogin',a:'chat',data:{username:dan,message:"howdy pard"}).done(function(json){
-			console.log(json);
-		});*/
-	 }
+     function checkSession(){
+         MyXHR('get',{method:'checkSession',a:'login'}).done(function(json){
+			if(json === "false"){
+                window.location.href = "/~lad4284/442/Battleship/login.html";
+            }else{
+                console.log("This user is logged in");
+            }
+		});
+     }
 	 
 	 ///////////////////////////////
 	 //utility stuff
@@ -67,7 +50,6 @@
 			cache: false,
 			url: 'mid.php',
 			data:d,
-			dataType:'json',
 			beforeSend:function(){
 				//turn on spinner if I have one 
 				if(id){
@@ -89,8 +71,9 @@
     </script>
   </head>
 
-  <body>
+  <body onload="checkSession()">
     <h5></h5>
     <div id="turn">Your turn:</div>
+      this is the lobby fool
   </body>
 </html>
