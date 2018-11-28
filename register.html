@@ -13,9 +13,9 @@
 </head>
 <body>
 
-    <div id="loginBox" class="center">
+    <div id="loginBox" class="center reg">
         <h2 class="text-center">Battleship</h2>
-        <h3 class="text-center">Login</h3><br>
+        <h3 class="text-center">Create Account</h3><br>
         <div class="container">
           <form class="form-horizontal">
             <div class="form-group">
@@ -32,14 +32,14 @@
             </div>
             <div class="form-group">        
               <div class="text-center">
-                <button class="btn btn-default" onclick="login()">Login</button>
+                <button class="btn btn-default" onclick="register()">Register</button>
               </div>
             </div>
           </form>
         </div>
         <br>
-        <p class="text-center">Don't have an account?<br>
-            <a href="register.html">Create Account</a></p>
+        <p class="text-center">Already have an account?<br>
+            <a href="login.html">Login</a></p>
     </div>
     
 </body>
@@ -48,17 +48,13 @@
     ///////////////////////////////
 	 //login stuff
 	 ///////////////////////////////
-	 function login(){
+	 function register(){
         var email = document.getElementById('email').value;
         email += "|"+document.getElementById('pwd').value;
          
-		MyXHR('get',{method:'doLogin',a:'login',data:email}).done(function(ok){
-            if(ok == "Login Success"){
-                MyXHR('get',{method:'startSession',a:'login',data:document.getElementById('email').value}).done(function(json){
-                    console.log(json);
-                    window.location.href = "/~lad4284/442/Battleship/index.html";
-                });
-            }
+		MyXHR('get',{method:'doRegister',a:'login',data:email}).done(function(ok){
+            alert("Account Created! Please Login.");
+            window.location.href = "/~lad4284/442/Battleship/login.html";
 		});
 	 }
 	 

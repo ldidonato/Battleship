@@ -22,6 +22,25 @@
         }
     }
 
+    function createAccount($email, $pass){
+        global $mysqli;
+        $sql="INSERT INTO BattleshipLogin (email, password) VALUES (?,?)";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("ss",$email,$pass);
+                $stmt->execute();
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while creating the account");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+        
+    }
+
 	
 
 

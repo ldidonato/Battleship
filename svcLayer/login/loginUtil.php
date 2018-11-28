@@ -23,6 +23,21 @@
        
         
     }
+    function doRegister($d){
+        ///email|password
+        $dataArr = explode("|",$d);
+        $response = createAccount($dataArr[0],$dataArr[1]);
+        echo($response);
+        
+        /*
+        if($response === 'null'){
+            echo("Login Fail");
+        }else{
+            echo("Login Success");
+        }*/
+
+
+    }
     
     function startSession($d){
         session_start();
