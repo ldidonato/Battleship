@@ -58,6 +58,11 @@
                     console.log(json);
                     window.location.href = "/~lad4284/442/Battleship/index.html";
                 });
+                MyXHR('get',{method:'goOnline',a:'login',data:document.getElementById('email').value}).done(function(json){
+                    console.log("user is now online");
+                });
+            }else{
+                alert("Invalid email or password.");
             }
 		});
 	 }

@@ -20,7 +20,6 @@
         }else{
             echo("Login Success");
         }
-       
         
     }
     function doRegister($d){
@@ -28,17 +27,29 @@
         $dataArr = explode("|",$d);
         $response = createAccount($dataArr[0],$dataArr[1]);
         echo($response);
-        
-        /*
-        if($response === 'null'){
-            echo("Login Fail");
-        }else{
-            echo("Login Success");
-        }*/
-
-
     }
     
+    ///////////////////////////////
+    //online stuff
+    ///////////////////////////////   
+    function goOnline($d){
+        ///$d = email
+        addOnline($d);
+    }
+    function getEmail(){
+        session_start();
+        echo($_SESSION["id"]);
+    }
+    function goOffline($d){
+        ///$d = email
+        removeOnline($d);
+    }
+
+    
+
+     ///////////////////////////////
+	 //session stuff
+	 ///////////////////////////////   
     function startSession($d){
         session_start();
         $_SESSION["id"] = $d;
@@ -52,6 +63,12 @@
         }else{
             echo("false");
         }
+    }
+    
+    function endSession(){
+        session_start();
+        $_SESSION["id"] = null;
+        session_destroy();
     }
 
 

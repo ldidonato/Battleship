@@ -53,7 +53,7 @@
         email += "|"+document.getElementById('pwd').value;
          
 		MyXHR('get',{method:'doRegister',a:'login',data:email}).done(function(ok){
-            alert("Account Created! Please Login.");
+            alert("Account Sucessfully Created! Please Login.");
             window.location.href = "/~lad4284/442/Battleship/login.html";
 		});
 	 }

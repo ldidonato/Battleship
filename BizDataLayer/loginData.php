@@ -40,6 +40,40 @@
         }
         
     }
+    function addOnline($email){
+        global $mysqli;
+        $sql="INSERT INTO BattleshipOnline (email) VALUES (?)";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("s",$email);
+                $stmt->execute();
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while creating the account");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
+    function removeOnline($email){
+        global $mysqli;
+        $sql="DELETE FROM `BattleshipOnline` WHERE email=?";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("s",$email);
+                $stmt->execute();
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while creating the account");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
 
 	
 

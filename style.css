@@ -10,6 +10,11 @@ h2{
     font-family: "MachineSTD" !important;
     font-size: 60px !important;
 }
+#header{
+    font-family: "MachineSTD" !important;
+    font-size: 30px;
+    color:white;
+}
 #loginBox{
     margin-top: 50px;
     border: 3px solid blue;
@@ -25,3 +30,4 @@ h2{
 .container {
     width: 100% !important; 
 }
+/*chat*/

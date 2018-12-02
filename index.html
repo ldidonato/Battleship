@@ -2,9 +2,7 @@
 
 <html>
   <head>
-    <title>test</title>
-    <script src="http://code.jquery.com/jquery-latest.js">
-    </script>
+    <title>Battleship</title>
     <script>
 	 
 	 
@@ -12,26 +10,32 @@
 	 ///////////////////////////////
 	 //chat stuff
 	 ///////////////////////////////
-        /*
-	 function getChat(){
-		MyXHR('get',{method:'getChat',a:'chat'}).done(function(json){
-			console.log(json);
-		});
-	 }
-    function sayChat(){
-		MyXHR('get',{method:'sayChat',a:'chat',data:{username:dan,message:"howdy pard"}).done(function(json){
-			console.log(json);
-		});
-	 }
-        */
+    
         
+        
+    
+     ///////////////////////////////
+	 //other stuff
+	 ///////////////////////////////   
      function checkSession(){
          MyXHR('get',{method:'checkSession',a:'login'}).done(function(json){
 			if(json === "false"){
                 window.location.href = "/~lad4284/442/Battleship/login.html";
             }else{
-                console.log("This user is logged in");
-            }
+                MyXHR('get',{method:'getEmail',a:'login'}).done(function(json){
+                    console.log(json+" is online");
+                    document.getElementById("userBox").innerHTML=json;
+                });//XHR
+            }//else
+		});//XHR
+     }
+    function endSession(){
+         var email = document.getElementById("userBox").innerHTML;
+         MyXHR('get',{method:'goOffline',a:'login',data:email}).done(function(json2){
+            console.log("user is now offline");
+         });
+         MyXHR('get',{method:'endSession',a:'login'}).done(function(json){
+			window.location.href = "/~lad4284/442/Battleship/login.html";
 		});
      }
 	 
@@ -69,11 +73,57 @@
 	 }
      
     </script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
   </head>
 
-  <body onload="checkSession()">
-    <h5></h5>
-    <div id="turn">Your turn:</div>
-      this is the lobby fool
+  <body onload="checkSession()" >
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" id="header">BATTLESHIP</a>
+        </div>
+          <!--
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="#">Home</a></li>
+          <li><a href="#">Page 1</a></li>
+          <li><a href="#">Page 2</a></li>
+        </ul>-->
+        <ul class="nav navbar-nav navbar-right">
+            <li><a style="color:white;cursor:default;"><span class="glyphicon glyphicon-user"></span> <span id="userBox">User</span></a></li>
+          <li><a onclick="endSession()" style="cursor: pointer;"><span class="glyphicon glyphicon-log-in"></span> Logout</a>
+        </ul>
+      </div>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-8" id="chatbox">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><span class="glyphicon glyphicon-globe"></span> Global Lobby</div>
+                  <div class="panel-body">...</div>
+                    <div class="panel-footer">say something</div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><span class="glyphicon glyphicon-pawn"></span> Challanges</div>
+                  <div class="panel-body">...</div>
+                </div>
+            </div>
+        </div>
+    </div>
   </body>
 </html>
+
+
+
+
+
+
+
+
+
