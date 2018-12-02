@@ -1,23 +1,26 @@
 <?php
 
-//go to the data layer and actually get the data I want
-include('BizDataLayer/chatData.php');
+    //go to the data layer and actually get the data I want
+    require "./BizDataLayer/chatData.php";
 
-	function getChat(){
-		//should they be here?
-		//no data to prep
-		
-		echo(getChatData());
-	}
+    $mysqli=new mysqli("localhost","lad4284","withkentucky",'lad4284');             
+    if(mysqli_connect_errno()){
+        printf("connection failed: ",mysqli_connect_errno());
+        exit();
+    }
 
-    function sayChat(d){
-        //should I be able to say this?
+    function getGlobalChat(){
+        //should they be here?
+        ///email|password
+        $response = getGlobal();
+        echo($response);
         
-        //prep the data
-        //split data {username:dan,message:"howdy pard"}
-        
-        
-        echo(sayChatData(d['username'],d['message']));
+    }
+    function sendGlobalChat($d){
+        //$d = message
+        session_start();
+        $email = $_SESSION["id"];
+        sendGChat($email,$d);
     }
 
 ?>

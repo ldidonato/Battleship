@@ -1,29 +1,44 @@
 <?php
 	//include dbInfo
-	require_once("../../dbInfoPS.inc");
+	//require_once("../../dbInfoPS.inc");
 	//include exceptions
 	require_once('./BizDataLayer/exception.php');
 	
-	function getChatData(){
-		global $conn; //I have to pull in the defined variable $conn to get it in the function scope...
-		$sql = "Select * from 546ArchChat";
-		try{
-			if($stmt=$conn->prepare($sql)){
-				echo returnJson($stmt);
-				$stmt->close();
-				$conn->close();
-			}else if(!$data){
-				throw new Exception("an error occured in the db hookup");
-			}
-		}catch(Exception $e){
-		
-		}
-	}
-
-    function sayChatData(who,whatSaid){
-        //put into db, then
+	function getGlobal(){
+        global $mysqli;
+        $sql="SELECT * FROM BattleshipChatGlobal";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                //$stmt->bind_param("ss",$email,$pass);
+                $data=returnJson($stmt);
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while getting login data");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
+    
+    function sendGChat($email, $message){
+        global $mysqli;
+        $sql="INSERT INTO `BattleshipChatGlobal`(`email`, `message`) VALUES (?,?)";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("ss",$email,$message);
+                $stmt->execute();
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while creating the account");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
         
-        //call getChatData
     }
 	
 

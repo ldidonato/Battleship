@@ -5,14 +5,32 @@
     <title>Battleship</title>
     <script>
 	 
-	 
-	 
 	 ///////////////////////////////
 	 //chat stuff
 	 ///////////////////////////////
+    function getGlobalChat(){
+        MyXHR('get',{method:'getGlobalChat',a:'chat'}).done(function(json){
+            var data = JSON.parse(json);
+            var text="";
+            for(var i=0; i<data.length; i++){
+                text += "<p><b>"+data[i].email+": </b> </b>"+data[i].message+"</p>";
+            }
+            document.getElementById('globalChatBody').innerHTML=text;
+        });//XHR
+    }
     
+    //runs every 2 secs
+    window.setInterval(function(){
+        getGlobalChat();
+    }, 2000);
+     
         
-        
+    function sendGlobalChat(){
+        var message = document.getElementById("globalInput").value;
+        MyXHR('get',{method:'sendGlobalChat',a:'chat',data:message}).done(function(json){
+             document.getElementById("globalInput").value = "";
+        });//XHR sendGlobalChat
+    }
     
      ///////////////////////////////
 	 //other stuff
@@ -25,6 +43,7 @@
                 MyXHR('get',{method:'getEmail',a:'login'}).done(function(json){
                     console.log(json+" is online");
                     document.getElementById("userBox").innerHTML=json;
+                    getGlobalChat();
                 });//XHR
             }//else
 		});//XHR
@@ -103,12 +122,31 @@
         <div class="row">
             <div class="col-sm-8" id="chatbox">
                 <div class="panel panel-default">
-                    <div class="panel-heading"><span class="glyphicon glyphicon-globe"></span> Global Lobby</div>
-                  <div class="panel-body">...</div>
-                    <div class="panel-footer">say something</div>
+                    <div class="panel-heading"><span class="glyphicon glyphicon-bullhorn"></span> Global Lobby</div>
+                    <div class="panel-body" id="globalChatBody">
+                        
+                    </div>
+                    <div class="panel-footer">
+                        <form>
+                          <div class="input-group">
+                            <input id="globalInput" type="text" class="form-control" placeholder="Say something...">
+                            <div class="input-group-btn">
+                              <div onclick="sendGlobalChat()" id="sendGlobal" class="btn btn-default" style="padding-top:9px;padding-bottom:9px;">
+                                <i class="glyphicon glyphicon-send"></i>
+                              </div>
+                            </div>
+                          </div>
+                        </form>
+                    </div>
                 </div>
             </div>
             <div class="col-sm-4">
+                <div class="panel panel-success">
+                    <div class="panel-heading"><span class="glyphicon glyphicon-globe"></span> Users Online</div>
+                  <div class="panel-body">
+                      ...
+                  </div>
+                </div>
                 <div class="panel panel-primary">
                     <div class="panel-heading"><span class="glyphicon glyphicon-pawn"></span> Challanges</div>
                   <div class="panel-body">...</div>

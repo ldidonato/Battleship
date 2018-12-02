@@ -31,3 +31,6 @@ h2{
     width: 100% !important; 
 }
 /*chat*/
+#globalChatBody{
+    font-family: monospace;
+}
