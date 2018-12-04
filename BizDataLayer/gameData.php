@@ -76,7 +76,6 @@
             log_error($e, $sql, null);
             return false;
         }
-        
     }
     function removeChallengeData($you,$opponent){
         global $mysqli;
@@ -94,9 +93,42 @@
             log_error($e, $sql, null);
             return false;
         }
+    }
+    function getEmptyLobbies(){
+        global $mysqli;
+        $sql="SELECT `lobbyID` FROM `BattleshipLobbyList` WHERE `status` = 'empty'";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                //$stmt->bind_param("ss",$email,$email);
+                $data=returnJson($stmt);
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while getting empty lobbies");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
         
     }
-
+    function enterLobby($you,$opponent,$lobby){
+        global $mysqli;
+        $sql="UPDATE `BattleshipLobbyList` SET `status`='full',`Player1`=?,`Player2`=? WHERE `lobbyID`=?";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("sss",$you,$opponent,$lobby);
+                $stmt->execute();
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while entering a lobby");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
 
 
 /*********************************Utilities*********************************/

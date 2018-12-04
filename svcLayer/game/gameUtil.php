@@ -35,5 +35,35 @@
         $you = $_SESSION["id"];
         echo(removeChallengeData($you,$opponent));
     }
+    function acceptChallenge($opponent){
+        session_start();
+        $you = $_SESSION["id"];
+        //get empty lobbies
+        $lobbies = json_decode(getEmptyLobbies(),true);
+        if(empty($lobbies)) {
+            echo("no lobbies avalible");
+        }else{
+            //grab first empty lobby
+            $lobby = $lobbies[0]["lobbyID"];
+            echo($lobby);
+        }   
+    }
+    function enterLobbyHelper($d){
+        session_start();
+        $you = $_SESSION["id"];
+        $dataArr = explode("|",$d);
+        //opponent | lobbyid
+        $response = enterLobby($you,$dataArr[0],$dataArr[1]);
+        echo($reponse);
+    }
+
 	
 ?>
+
+
+
+
+
+
+
+

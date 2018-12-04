@@ -97,12 +97,12 @@
             var data = JSON.parse(json);
             var text="";
             if(data === null){
-                document.getElementById("challengesBody").innerHTML ="<div class='info'>No Challenges</div>"
+              document.getElementById("challengesBody").innerHTML ="<div class='info'>No Challenges</div>"
             }else{
                 for(var i=0; i<data.length; i++){
                     if(data[i].status == 'pending'){
                         if(data[i].Challenger !== document.getElementById("userBox").innerHTML){
-                            text += "<div><b>"+data[i].Challenger+"</b> has sent a challenge!<div onclick='denyChallenge(this)' type='button' value='"+data[i].Challenger+"' class='btn btn-danger btn-xs cbutton'>Deny</div><div type='button' class='btn btn-success btn-xs cbutton'>Accept</div></div><hr>";
+                            text += "<div><b>"+data[i].Challenger+"</b> has sent a challenge!<div onclick='denyChallenge(this)' type='button' value='"+data[i].Challenger+"' class='btn btn-danger btn-xs cbutton'>Deny</div><div onclick='acceptChallenge(this)' type='button' class='btn btn-success btn-xs cbutton' value='"+data[i].Challenger+"'>Accept</div></div><hr>";
                         }else{
                             text += "<div>Challenge sent to  <b>"+data[i].Opponent+"</b>!</div><hr>";
                         }
@@ -127,21 +127,33 @@
         var challenger = data.attributes["value"].value;
         MyXHR('get',{method:'sendChallenge',a:'game',data:challenger}).done(function(json){
             console.log("challenge sent to "+challenger);
-        }); //offline XHR
+        }); 
         
      }
      function denyChallenge(data){
         var challenger = data.attributes["value"].value;
         MyXHR('get',{method:'denyChallenge',a:'game',data:challenger}).done(function(json){
             console.log("denied challenge from "+challenger);
-        }); //offline XHR
+        }); 
      }
     function removeChallenge(data){
         var opponent = data.attributes["value"].value;
         MyXHR('get',{method:'removeChallenge',a:'game',data:opponent}).done(function(json){
             console.log("romving challenge: you vs "+opponent);
-        }); //offline XHR
+        }); 
      }
+     function acceptChallenge(data){
+        var opponent = data.attributes["value"].value;
+        MyXHR('get',{method:'acceptChallenge',a:'game',data:opponent}).done(function(lobbyid){
+            lobbyid = lobbyid.replace(/(\r\n\t|\n|\r\t)/gm,"");
+            console.log("accepting challenge: you vs "+opponent+" in lobby "+lobbyid);
+            var data = opponent+"|"+lobbyid
+            MyXHR('get',{method:'enterLobbyHelper',a:'game',data:data}).done(function(json){
+                console.log(json);
+            }); 
+        }); 
+     }
+    
         
         
         
