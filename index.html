@@ -22,7 +22,14 @@
     //runs every 2 secs
     window.setInterval(function(){
         getGlobalChat();
+        getOnlineUsers();
+        getChallenges();
     }, 2000);
+    //runs every 20 mins
+    window.setInterval(function(){
+        endSession();
+        console.log("20mins has passed you have been logged out");
+    }, 20*60000);
      
         
     function sendGlobalChat(){
@@ -33,30 +40,112 @@
     }
     
      ///////////////////////////////
-	 //other stuff
+	 //session stuff
 	 ///////////////////////////////   
      function checkSession(){
          MyXHR('get',{method:'checkSession',a:'login'}).done(function(json){
 			if(json === "false"){
+                endSession();
                 window.location.href = "/~lad4284/442/Battleship/login.html";
             }else{
                 MyXHR('get',{method:'getEmail',a:'login'}).done(function(json){
                     console.log(json+" is online");
                     document.getElementById("userBox").innerHTML=json;
+                    //INITALIZE STUFF
                     getGlobalChat();
+                    getOnlineUsers();
+                    getChallenges();
                 });//XHR
             }//else
 		});//XHR
      }
     function endSession(){
-         var email = document.getElementById("userBox").innerHTML;
-         MyXHR('get',{method:'goOffline',a:'login',data:email}).done(function(json2){
+        MyXHR('get',{method:'goOffline',a:'login'}).done(function(json2){
             console.log("user is now offline");
-         });
+        }); //offline XHR  
+        
          MyXHR('get',{method:'endSession',a:'login'}).done(function(json){
 			window.location.href = "/~lad4284/442/Battleship/login.html";
 		});
      }
+        
+	 ///////////////////////////////
+	 //online widget stuff
+	 ///////////////////////////////
+     function getOnlineUsers(){
+        MyXHR('get',{method:'getOnlineUsers',a:'game'}).done(function(json){
+            var data = JSON.parse(json);
+            var text="";
+            for(var i=0; i<data.length; i++){
+                if(data[i].email !== document.getElementById("userBox").innerHTML){
+                    text += "<div>"+data[i].email+"<div onclick='sendChallenge(this)' type='button' value='"+data[i].email+"' class='btn btn-warning btn-xs cbutton'>Challenge</div></div><hr>";
+                }//check to so loggedin user dosen't show show up on list
+            }
+            
+            //Display info message if no one else online
+            if(data.length === 1){
+                document.getElementById("usersOnlineBody").innerHTML ="<div class='info'>No Other Users Online</div>"
+            }else{
+                document.getElementById("usersOnlineBody").innerHTML=text;
+            }
+        }); //XHR  
+     }
+        
+    //Challenges widget
+     function getChallenges(){
+         MyXHR('get',{method:'getChallenges',a:'game'}).done(function(json){
+            var data = JSON.parse(json);
+            var text="";
+            if(data === null){
+                document.getElementById("challengesBody").innerHTML ="<div class='info'>No Challenges</div>"
+            }else{
+                for(var i=0; i<data.length; i++){
+                    if(data[i].status == 'pending'){
+                        if(data[i].Challenger !== document.getElementById("userBox").innerHTML){
+                            text += "<div><b>"+data[i].Challenger+"</b> has sent a challenge!<div onclick='denyChallenge(this)' type='button' value='"+data[i].Challenger+"' class='btn btn-danger btn-xs cbutton'>Deny</div><div type='button' class='btn btn-success btn-xs cbutton'>Accept</div></div><hr>";
+                        }else{
+                            text += "<div>Challenge sent to  <b>"+data[i].Opponent+"</b>!</div><hr>";
+                        }
+                    }else if(data[i].status == 'denied'){
+                        if(data[i].Opponent !== document.getElementById("userBox").innerHTML){
+                            text += "<div><b>"+data[i].Opponent+"</b> has denied your challenge<div onclick='removeChallenge(this)' type='button' value='"+data[i].Opponent+"' class='btn btn-info btn-xs cbutton'>Ok</div></div><hr>";
+                        }else{
+                            //denied but challenger has no said ok
+                            text += "<div>You have denied <b>"+data[i].Challenger+"</b>'s  challenge</div><hr>";
+                        }
+                    }else if(data[i].status == 'accepted'){
+                        //TODO
+                    }
+
+                }
+                 document.getElementById("challengesBody").innerHTML = text;
+            }
+        }); //offline XHR  
+     }
+        
+     function sendChallenge(data){
+        var challenger = data.attributes["value"].value;
+        MyXHR('get',{method:'sendChallenge',a:'game',data:challenger}).done(function(json){
+            console.log("challenge sent to "+challenger);
+        }); //offline XHR
+        
+     }
+     function denyChallenge(data){
+        var challenger = data.attributes["value"].value;
+        MyXHR('get',{method:'denyChallenge',a:'game',data:challenger}).done(function(json){
+            console.log("denied challenge from "+challenger);
+        }); //offline XHR
+     }
+    function removeChallenge(data){
+        var opponent = data.attributes["value"].value;
+        MyXHR('get',{method:'removeChallenge',a:'game',data:opponent}).done(function(json){
+            console.log("romving challenge: you vs "+opponent);
+        }); //offline XHR
+     }
+        
+        
+        
+        
 	 
 	 ///////////////////////////////
 	 //utility stuff
@@ -87,6 +176,7 @@
 				});
 			}
 		}).fail(function(err){
+            console.log("from error in index.html");
 			console.log(err);
 		});
 	 }
@@ -120,7 +210,7 @@
     </nav>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-8" id="chatbox">
+            <div class="col-sm-6" id="chatbox">
                 <div class="panel panel-default">
                     <div class="panel-heading"><span class="glyphicon glyphicon-bullhorn"></span> Global Lobby</div>
                     <div class="panel-body" id="globalChatBody">
@@ -140,20 +230,37 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-6">
                 <div class="panel panel-success">
                     <div class="panel-heading"><span class="glyphicon glyphicon-globe"></span> Users Online</div>
-                  <div class="panel-body">
-                      ...
+                  <div class="panel-body" id="usersOnlineBody">
+                      
+                  </div>
+                </div>
+                <div class="panel panel-warning">
+                    <div class="panel-heading"><span class="glyphicon glyphicon-exclamation-sign"></span> Challanges</div>
+                  <div class="panel-body" id="challengesBody">
+                      
+                      <!--
+                      <div>
+                          User2 has denied your challenge
+                          <div type="button" class="btn btn-info btn-xs cbutton">Ok</div>
+                      </div>-->
+                  
                   </div>
                 </div>
                 <div class="panel panel-primary">
-                    <div class="panel-heading"><span class="glyphicon glyphicon-pawn"></span> Challanges</div>
-                  <div class="panel-body">...</div>
-                </div>
-            </div>
-        </div>
-    </div>
+                    <div class="panel-heading"><span class="glyphicon glyphicon-pawn"></span> Games</div>
+                  <div class="panel-body">
+                      <div>
+                          Vs. User2
+                          <div type="button" class="btn btn-success btn-xs cbutton">Play</div>
+                      </div>
+                  </div>
+                </div><!-- game panel-->
+            </div><!--sidebar-->
+        </div><!-- body row-->
+    </div><!-- body container-->
   </body>
 </html>
 

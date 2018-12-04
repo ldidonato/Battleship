@@ -33,4 +33,16 @@ h2{
 /*chat*/
 #globalChatBody{
     font-family: monospace;
+    height:70%;
+}
+hr{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.cbutton{
+    float: right;
+    margin-left: 5px;
+}
+.info{
+    color:red;
 }

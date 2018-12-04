@@ -40,9 +40,11 @@
         session_start();
         echo($_SESSION["id"]);
     }
-    function goOffline($d){
+    function goOffline(){
         ///$d = email
-        removeOnline($d);
+        session_start();
+        $email = $_SESSION["id"];
+        removeOnline($email);
     }
 
     
