@@ -24,6 +24,7 @@
         getGlobalChat();
         getOnlineUsers();
         getChallenges();
+        getGames();
     }, 2000);
     //runs every 20 mins
     window.setInterval(function(){
@@ -55,6 +56,7 @@
                     getGlobalChat();
                     getOnlineUsers();
                     getChallenges();
+                    getGames();
                 });//XHR
             }//else
 		});//XHR
@@ -139,7 +141,7 @@
     function removeChallenge(data){
         var opponent = data.attributes["value"].value;
         MyXHR('get',{method:'removeChallenge',a:'game',data:opponent}).done(function(json){
-            console.log("romving challenge: you vs "+opponent);
+            console.log("removing challenge: you vs "+opponent);
         }); 
      }
      function acceptChallenge(data){
@@ -148,9 +150,39 @@
             lobbyid = lobbyid.replace(/(\r\n\t|\n|\r\t)/gm,"");
             console.log("accepting challenge: you vs "+opponent+" in lobby "+lobbyid);
             var data = opponent+"|"+lobbyid
-            MyXHR('get',{method:'enterLobbyHelper',a:'game',data:data}).done(function(json){
-                console.log(json);
-            }); 
+            if(lobbyid == "no lobbies avalible"){
+               alert("No lobbies avalible, tough luck.");
+            }else{
+               MyXHR('get',{method:'enterLobbyHelper',a:'game',data:data}).done(function(json){
+                    //ahhh
+                }); 
+                //delete from challenges panel
+                MyXHR('get',{method:'removeChallengeA',a:'game',data:opponent}).done(function(json2){
+                    console.log("removing challenge: you vs "+opponent);
+                    console.log(json2)
+                }); //remove challenge
+            }//if else
+        }); //acceptchallenge
+     }
+     function getGames(){
+         MyXHR('get',{method:'getGames',a:'game'}).done(function(json){
+            var data = JSON.parse(json);
+            var text="";
+            if(data !== null){
+                for(var i=0; i<data.length; i++){
+                    var opponent="";
+                    if(data[i].Player1 !== document.getElementById("userBox").innerHTML){
+                        opponent = data[i].Player1;
+                    } else{
+                         opponent = data[i].Player2;
+                    }
+                    text += "<div>Vs. "+opponent+"<div type='button' class='btn btn-success btn-xs cbutton'>Play</div></div><hr>";
+                }
+                document.getElementById('gamesBody').innerHTML = text;
+            }else{
+                document.getElementById("gamesBody").innerHTML ="<div class='info'>No Games</div>"
+            }
+         
         }); 
      }
     
@@ -263,11 +295,8 @@
                 </div>
                 <div class="panel panel-primary">
                     <div class="panel-heading"><span class="glyphicon glyphicon-pawn"></span> Games</div>
-                  <div class="panel-body">
-                      <div>
-                          Vs. User2
-                          <div type="button" class="btn btn-success btn-xs cbutton">Play</div>
-                      </div>
+                  <div class="panel-body" id="gamesBody">
+                      
                   </div>
                 </div><!-- game panel-->
             </div><!--sidebar-->

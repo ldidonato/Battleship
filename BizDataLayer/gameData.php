@@ -129,7 +129,23 @@
             return false;
         }
     }
-
+    function getGamesData($email){
+        global $mysqli;
+        $sql="SELECT * FROM `BattleshipLobbyList` WHERE `Player1` = ? OR `Player2` = ?";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("ss",$email,$email);
+                $data=returnJson($stmt);
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while getting challenge info");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
 
 /*********************************Utilities*********************************/
 /*************************

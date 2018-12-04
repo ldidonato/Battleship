@@ -35,6 +35,11 @@
         $you = $_SESSION["id"];
         echo(removeChallengeData($you,$opponent));
     }
+    function removeChallengeA($opponent){
+        session_start();
+        $you = $_SESSION["id"];
+        echo(removeChallengeData($opponent,$you));
+    }
     function acceptChallenge($opponent){
         session_start();
         $you = $_SESSION["id"];
@@ -55,6 +60,11 @@
         //opponent | lobbyid
         $response = enterLobby($you,$dataArr[0],$dataArr[1]);
         echo($reponse);
+    }
+    function getGames(){
+        session_start();
+        $you = $_SESSION["id"];
+        echo(getGamesData($you));
     }
 
 	
