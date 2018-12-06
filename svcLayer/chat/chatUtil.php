@@ -23,4 +23,18 @@
         sendGChat($email,$d);
     }
 
+    function getLocalChat(){
+        session_start();
+        $gid = $_SESSION["GameID"];
+        $response = getLocal($gid);
+        echo($response);
+    }
+    function sendLocalChat($d){
+        //$d = message
+        session_start();
+        $gid = $_SESSION["GameID"];
+        $email = $_SESSION["id"];
+        sendLChat($gid,$email,$d);
+    }
+
 ?>

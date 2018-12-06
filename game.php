@@ -10,6 +10,7 @@
     //runs every 2 secs
     window.setInterval(function(){
         checkWinner();
+        getLocalChat();
     }, 2000);
     //runs every 20 mins
     window.setInterval(function(){
@@ -33,6 +34,7 @@
                     document.getElementById("userBox").innerHTML=json;
                     //INITALIZE STUFF
                     fillInfoWidget();
+                    getLocalChat();
                 });//XHR
             }//else
 		});//XHR
@@ -58,6 +60,27 @@
                 });
             }
 		});
+    }
+    
+        //Chat stuff
+    function getLocalChat(){
+        MyXHR('get',{method:'getLocalChat',a:'chat'}).done(function(json){
+            var data = JSON.parse(json);
+            var text="";
+            if(data !==  null){
+                for(var i=0; i<data.length; i++){
+                    text += "<p><b>"+data[i].email+": </b> </b>"+data[i].message+"</p>";
+                }
+            }
+            document.getElementById('localChatBody').innerHTML=text;
+        });//XHR
+    }
+        
+    function sendLocalChat(){
+        var message = document.getElementById("localInput").value;
+        MyXHR('get',{method:'sendLocalChat',a:'chat',data:message}).done(function(json){
+             document.getElementById("localInput").value = "";
+        });//XHR sendGlobalChat
     }
         
 	 ///////////////////////////////
@@ -169,9 +192,9 @@
                     <div class="panel-footer">
                         <form>
                           <div class="input-group">
-                            <input id="" type="text" class="form-control" placeholder="Say something...">
+                            <input id="localInput" type="text" class="form-control" placeholder="Say something...">
                             <div class="input-group-btn">
-                              <div onclick="" id="" class="btn btn-default" style="padding-top:9px;padding-bottom:9px;">
+                              <div onclick="sendLocalChat()" id="" class="btn btn-default" style="padding-top:9px;padding-bottom:9px;">
                                 <i class="glyphicon glyphicon-send"></i>
                               </div>
                             </div>

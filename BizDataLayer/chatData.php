@@ -14,7 +14,24 @@
                 $mysqli->close();
                 return $data;
             }else{
-                throw new Exception("An error occurred while getting login data");
+                throw new Exception("An error occurred while getting global chat");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
+	function getLocal($gid){
+        global $mysqli;
+        $sql="SELECT * FROM BattleshipChatLocal WHERE GameID=?";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("i",$gid);
+                $data=returnJson($stmt);
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while getting local chat");
             }
         }catch (Exception $e) {
             log_error($e, $sql, null);
@@ -32,7 +49,25 @@
                 $mysqli->close();
                 return $data;
             }else{
-                throw new Exception("An error occurred while creating the account");
+                throw new Exception("An error occurred while sending global chat");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+        
+    }
+    function sendLChat($gid, $email, $message){
+        global $mysqli;
+        $sql="INSERT INTO `BattleshipChatLocal`(`GameID`,`email`, `message`) VALUES (?,?,?)";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("iss",$gid,$email,$message);
+                $stmt->execute();
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while sending local chat");
             }
         }catch (Exception $e) {
             log_error($e, $sql, null);
