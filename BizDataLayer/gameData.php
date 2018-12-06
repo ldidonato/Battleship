@@ -94,35 +94,34 @@
             return false;
         }
     }
-    function getEmptyLobbies(){
+    function createGame($you,$opponent){
         global $mysqli;
-        $sql="SELECT `lobbyID` FROM `BattleshipLobbyList` WHERE `status` = 'empty'";
+        $sql="INSERT INTO `BattleshipGameList`(`Player1`, `Player2`) VALUES (?,?)";
         try{
             if($stmt=$mysqli->prepare($sql)){
-                //$stmt->bind_param("ss",$email,$email);
-                $data=returnJson($stmt);
+                $stmt->bind_param("ss",$you,$opponent);
+                $stmt->execute();
                 $mysqli->close();
                 return $data;
             }else{
-                throw new Exception("An error occurred while getting empty lobbies");
+                throw new Exception("An error occurred while creating game part1");
             }
         }catch (Exception $e) {
             log_error($e, $sql, null);
             return false;
         }
-        
     }
-    function enterLobby($you,$opponent,$lobby){
+    function getLatestGameID($Player1, $Player2){
         global $mysqli;
-        $sql="UPDATE `BattleshipLobbyList` SET `status`='full',`Player1`=?,`Player2`=? WHERE `lobbyID`=?";
+        $sql="SELECT GameID FROM BattleshipGameList WHERE Player1='lauren' AND Player2='kevin' ORDER BY GameID DESC LIMIT 0,1";
         try{
             if($stmt=$mysqli->prepare($sql)){
-                $stmt->bind_param("sss",$you,$opponent,$lobby);
-                $stmt->execute();
+                $stmt->bind_param("ss",$Player1,$Player2);
+                $data=returnJson($stmt);
                 $mysqli->close();
                 return $data;
             }else{
-                throw new Exception("An error occurred while entering a lobby");
+                throw new Exception("An error occurred while getting lastest game ID");
             }
         }catch (Exception $e) {
             log_error($e, $sql, null);
@@ -131,7 +130,7 @@
     }
     function getGamesData($email){
         global $mysqli;
-        $sql="SELECT * FROM `BattleshipLobbyList` WHERE `Player1` = ? OR `Player2` = ?";
+        $sql="SELECT * FROM `BattleshipGameList` WHERE `Player1` = ? OR `Player2` = ?";
         try{
             if($stmt=$mysqli->prepare($sql)){
                 $stmt->bind_param("ss",$email,$email);

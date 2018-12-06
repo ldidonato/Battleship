@@ -43,23 +43,15 @@
     function acceptChallenge($opponent){
         session_start();
         $you = $_SESSION["id"];
-        //get empty lobbies
-        $lobbies = json_decode(getEmptyLobbies(),true);
-        if(empty($lobbies)) {
-            echo("no lobbies avalible");
-        }else{
-            //grab first empty lobby
-            $lobby = $lobbies[0]["lobbyID"];
-            echo($lobby);
-        }   
+        createGame($you,$opponent);  
+        //you = player1, opponent = player2
+        //Player1 | Player2
+        echo($you."|".$opponent);
     }
-    function enterLobbyHelper($d){
-        session_start();
-        $you = $_SESSION["id"];
+    function getGameID($d){
         $dataArr = explode("|",$d);
-        //opponent | lobbyid
-        $response = enterLobby($you,$dataArr[0],$dataArr[1]);
-        echo($reponse);
+        $response = getLatestGameID($dataArr[0],$dataArr[1]);
+        echo($response);
     }
     function getGames(){
         session_start();

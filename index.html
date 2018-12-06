@@ -146,22 +146,20 @@
      }
      function acceptChallenge(data){
         var opponent = data.attributes["value"].value;
-        MyXHR('get',{method:'acceptChallenge',a:'game',data:opponent}).done(function(lobbyid){
-            lobbyid = lobbyid.replace(/(\r\n\t|\n|\r\t)/gm,"");
-            console.log("accepting challenge: you vs "+opponent+" in lobby "+lobbyid);
-            var data = opponent+"|"+lobbyid
-            if(lobbyid == "no lobbies avalible"){
-               alert("No lobbies avalible, tough luck.");
-            }else{
-               MyXHR('get',{method:'enterLobbyHelper',a:'game',data:data}).done(function(json){
-                    //ahhh
-                }); 
-                //delete from challenges panel
-                MyXHR('get',{method:'removeChallengeA',a:'game',data:opponent}).done(function(json2){
-                    console.log("removing challenge: you vs "+opponent);
-                    console.log(json2)
-                }); //remove challenge
-            }//if else
+        MyXHR('get',{method:'acceptChallenge',a:'game',data:opponent}).done(function(json2){
+            var data = json2.split("|");
+            var player1 = data[0];
+            var player2 = data[1];
+            /*MyXHR('get',{method:'getGameID',a:'game',data:json2}).done(function(json){
+                var data = JSON.parse(json);
+                var gid = data[0].GameID;
+                console.log("accepting challenge: you vs "+opponent+" as game "+gid);
+            }); //getGameID*/
+            MyXHR('get',{method:'removeChallengeA',a:'game',data:opponent}).done(function(json2){
+                console.log("removing challenge: you vs "+opponent);
+                console.log(json2)
+            }); //remove challengeA
+            
         }); //acceptchallenge
      }
      function getGames(){
@@ -176,7 +174,7 @@
                     } else{
                          opponent = data[i].Player2;
                     }
-                    text += "<div>Vs. "+opponent+"<div type='button' class='btn btn-success btn-xs cbutton'>Play</div></div><hr>";
+                    text += "<div>Vs. "+opponent+"<div type='button' class='btn btn-success btn-xs cbutton' value='"+data[i].GameID+"'>Play</div></div><hr>";
                 }
                 document.getElementById('gamesBody').innerHTML = text;
             }else{
