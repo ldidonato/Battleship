@@ -162,6 +162,15 @@
             
         }); //acceptchallenge
      }
+     function playGame(data){
+         var GameID = data.attributes["value"].value;
+          MyXHR('get',{method:'playGameCheck',a:'game',data:GameID}).done(function(json){
+              var data = JSON.parse(json);
+              console.log("Moving to game "+data[0].GameID);
+              window.location.href = "/~lad4284/442/Battleship/game.php?GameID="+data[0].GameID;
+          });
+         
+     }//playGame
      function getGames(){
          MyXHR('get',{method:'getGames',a:'game'}).done(function(json){
             var data = JSON.parse(json);
@@ -174,7 +183,7 @@
                     } else{
                          opponent = data[i].Player2;
                     }
-                    text += "<div>Vs. "+opponent+"<div type='button' class='btn btn-success btn-xs cbutton' value='"+data[i].GameID+"'>Play</div></div><hr>";
+                    text += "<div>Vs. "+opponent+"<div onclick='playGame(this)' type='button' class='btn btn-success btn-xs cbutton' value='"+data[i].GameID+"'>Play</div></div><hr>";
                 }
                 document.getElementById('gamesBody').innerHTML = text;
             }else{

@@ -1,5 +1,3 @@
-
-
 <html>
   <head>
     <title>Play | Battleship</title>
@@ -11,10 +9,7 @@
     
     //runs every 2 secs
     window.setInterval(function(){
-        /*getGlobalChat();
-        getOnlineUsers();
-        getChallenges();
-        getGames();*/
+        checkWinner();
     }, 2000);
     //runs every 20 mins
     window.setInterval(function(){
@@ -26,19 +21,65 @@
      ///////////////////////////////
 	 //session stuff
 	 ///////////////////////////////   
-     function checkSessionLobby1(){
-         
-         
-         
+     function checkSession(){
+         MyXHR('get',{method:'checkSession',a:'login'}).done(function(json){
+			if(json === "false"){
+                endSession();
+                window.location.href = "/~lad4284/442/Battleship/login.html";
+                
+            }else{
+                MyXHR('get',{method:'getEmail',a:'login'}).done(function(json){
+                    console.log(json+" is online");
+                    document.getElementById("userBox").innerHTML=json;
+                    //INITALIZE STUFF
+                    fillInfoWidget();
+                });//XHR
+            }//else
+		});//XHR
      }
     function endSession(){
-
+        MyXHR('get',{method:'goOffline',a:'login'}).done(function(json2){
+            console.log("user is now offline");
+        }); //offline XHR  
+        
+         MyXHR('get',{method:'endSession',a:'login'}).done(function(json){
+			window.location.href = "/~lad4284/442/Battleship/login.html";
+		});
      }
+    
+    function checkWinner(){
+        MyXHR('get',{method:'getGame',a:'game'}).done(function(json){
+			var data = JSON.parse(json);
+            if(data[0].winner !== ""){
+                alert(data[0].winner+" has won Battleship!");
+                MyXHR('get',{method:'endGame',a:'game'}).done(function(json){
+                    console.log("game has ended");
+			         window.location.href = "/~lad4284/442/Battleship/index.html";
+                });
+            }
+		});
+    }
         
 	 ///////////////////////////////
-	 //online widget stuff
+	 //info widget stuff
 	 ///////////////////////////////
-
+    function fillInfoWidget(){
+        MyXHR('get',{method:'getGame',a:'game'}).done(function(json){
+			var data = JSON.parse(json);
+            var text="<span class='glyphicon glyphicon-pawn'></span> ";
+            document.getElementById("vsBox").innerHTML = text+data[0].Player1+" VS. "+data[0].Player2;
+		});
+    }
+    function giveUp(){
+        MyXHR('get',{method:'getGame',a:'game'}).done(function(json){
+            var data = JSON.parse(json);
+            var info = data[0].Player1+"|"+data[0].Player2;
+            //pass players in
+            MyXHR('get',{method:'loseGame',a:'game',data:info}).done(function(json2){
+                console.log("you have given up"+json2);
+            });
+        });
+    }
  
         
         
@@ -86,11 +127,11 @@
     <link rel="stylesheet" type="text/css" href="style.css">
   </head>
 
-  <body onload="checkSessionLobby1()" >
+  <body onload="checkSession()" >
     <nav class="navbar navbar-inverse">
       <div class="container-fluid">
         <div class="navbar-header">
-          <a class="navbar-brand" id="header">BATTLESHIP LOBBY 1</a>
+          <a class="navbar-brand" id="header">BATTLESHIP</a>
         </div>
         <ul class="nav navbar-nav navbar-right">
             <li><a style="color:white;cursor:default;"><span class="glyphicon glyphicon-user"></span> <span id="userBox">User</span></a></li>
@@ -109,12 +150,18 @@
                   <div class="panel-body" id="">
                       
                   </div>
-                </div><!-- game panel-->
+                </div><!-- match panel-->
             </div><!--sidebar-->
             <div class="col-sm-4" id="chatbox">
+                <div class="panel panel-info">
+                    <div class="panel-heading" id="vsBox"> P1 VS P2</div>
+                  <div class="panel-body" id="">
+                      <button type="button" onclick="giveUp()" class="btn btn-danger">Forfeit</button>
+                  </div>
+                </div><!-- game panel-->
                 <div class="panel panel-default">
-                    <div class="panel-heading"><span class="glyphicon glyphicon-bullhorn"></span> Lobby Chat</div>
-                    <div class="panel-body" id="globalChatBody">
+                    <div class="panel-heading"><span class="glyphicon glyphicon-bullhorn"></span> Chat</div>
+                    <div class="panel-body" id="localChatBody">
                         
                         
                         

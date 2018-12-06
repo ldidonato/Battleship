@@ -8,6 +8,9 @@
         exit();
     }
 
+///////////////////////////////////////////////////
+//index.html functions
+///////////////////////////////////////////////////
     function getOnlineUsers(){
         echo(getOUsers());
     }
@@ -47,19 +50,52 @@
         //you = player1, opponent = player2
         //Player1 | Player2
         echo($you."|".$opponent);
-    }
+    }/*
     function getGameID($d){
         $dataArr = explode("|",$d);
         $response = getLatestGameID($dataArr[0],$dataArr[1]);
         echo($response);
-    }
+    }*/
     function getGames(){
         session_start();
         $you = $_SESSION["id"];
         echo(getGamesData($you));
     }
+    function playGameCheck($gid){
+        session_start();
+        $_SESSION["GameID"] = $gid;
+        echo(getGameByID($gid));
+    }
+///////////////////////////////////////////////////
+//game.html functions
+///////////////////////////////////////////////////
+    
+    function getGame(){
+        session_start();
+        $gid = $_SESSION["GameID"];
+        echo(getGameByID($gid));
+    }
+    function endGame(){
+        session_start();
+        $gid = $_SESSION["GameID"];
+        echo(removeIDfromGameList($gid));
+    }
+    function loseGame($d){
+        session_start();
+        $gid = $_SESSION["GameID"];
+        $you = $_SESSION["id"];
+        $dataArr = explode("|",$d);
+        if($dataArr[0] == $you){
+            loseGameData($dataArr[1],$gid);
+            echo("1");
+        }else{
+            loseGameData($dataArr[0],$gid);
+            echo($d);
+        }
+        
+        
+    }
 
-	
 ?>
 
 

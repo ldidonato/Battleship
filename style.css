@@ -35,6 +35,10 @@ h2{
     font-family: monospace;
     height:70%;
 }
+#localChatBody{
+    font-family: monospace;
+    height:55%;
+}
 hr{
     margin-top: 10px;
     margin-bottom: 10px;

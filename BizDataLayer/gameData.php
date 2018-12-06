@@ -111,9 +111,11 @@
             return false;
         }
     }
+    //NOT USED
+/*
     function getLatestGameID($Player1, $Player2){
         global $mysqli;
-        $sql="SELECT GameID FROM BattleshipGameList WHERE Player1='lauren' AND Player2='kevin' ORDER BY GameID DESC LIMIT 0,1";
+        $sql="SELECT GameID FROM BattleshipGameList WHERE Player1=? AND Player2=? ORDER BY GameID DESC LIMIT 0,1";
         try{
             if($stmt=$mysqli->prepare($sql)){
                 $stmt->bind_param("ss",$Player1,$Player2);
@@ -122,6 +124,23 @@
                 return $data;
             }else{
                 throw new Exception("An error occurred while getting lastest game ID");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }*/
+    function getGameByID($gid){
+        global $mysqli;
+        $sql="SELECT * FROM BattleshipGameList WHERE GameID=?";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("i",$gid);
+                $data=returnJson($stmt);
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while getting game by id");
             }
         }catch (Exception $e) {
             log_error($e, $sql, null);
@@ -138,13 +157,55 @@
                 $mysqli->close();
                 return $data;
             }else{
-                throw new Exception("An error occurred while getting challenge info");
+                throw new Exception("An error occurred while getting games data");
             }
         }catch (Exception $e) {
             log_error($e, $sql, null);
             return false;
         }
     }
+/*********************************Game Info****************************/
+
+   function removeIDfromGameList($gid){
+        global $mysqli;
+        $sql="DELETE FROM BattleshipGameList WHERE GameID=?";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("i",$gid);
+                $stmt->execute();
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while denying someone");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
+    function loseGameData($you,$gid){
+        global $mysqli;
+        $sql="UPDATE `BattleshipGameList` SET `winner`=? WHERE GameID=?";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("si",$you,$gid);
+                $stmt->execute();
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while denying someone");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
+
+
+
+
+
+
 
 /*********************************Utilities*********************************/
 /*************************
