@@ -103,9 +103,92 @@
             });
         });
     }
- 
+ 	 ///////////////////////////////
+	 //board stuff
+	 ///////////////////////////////
+     function init(){
+         var svgns = "http://www.w3.org/2000/svg";
+         var boardnum = 5;
+         //make top
+         
+         //make pegs for attack board
+         for(var c =0; c<boardnum; c++){ //0-3
+             for(var r=0; r<boardnum; r++){ //A-D- 0-3
+                 var ele = makePeg(50+(50*r),50+(50*c),"a_"+c+"_"+r, "peg attack")
+                 document.getElementById("board").appendChild(ele);
+             }//r
+         }//c
+         
+         //make peg for defense board
+         for(var c =0; c<boardnum; c++){ //0-3
+             for(var r=0; r<boardnum; r++){ //A-D- 0-3
+                 var ele = makePeg(50+(50*r),((boardnum+2)*50)+(50*c),"d_"+c+"_"+r, "peg defend")
+                 document.getElementById("board").appendChild(ele);
+             }//r
+         }//c
+         
+         //make boats
+         //w,h,x,y
+         var boat = makeBoat(50,40,400,400,'boat1',2);
+         document.getElementById("board").appendChild(boat);
+         var boat2 = makeBoat(50,40,400,500,'boat1',3);
+         document.getElementById("board").appendChild(boat2);
+        
+         
+         
+     }//init
+        
+    function makePeg(cx, cy, id, cla){
+         var svgns = "http://www.w3.org/2000/svg";
+         var ele=document.createElementNS(svgns,'rect');
+         ele.setAttributeNS(null,'id','pId_'+id);
+         ele.setAttributeNS(null,'x',cx);
+         ele.setAttributeNS(null,'y',cy);
+         ele.setAttributeNS(null,'width','48');
+         ele.setAttributeNS(null,'height','48');
+         ele.setAttributeNS(null,'stroke','#333');
+         ele.setAttributeNS(null,'stroke-width','3');
+         ele.setAttributeNS(null,'fill','#d9edf7');
+         ele.setAttributeNS(null,'class',cla);
+         ele.onclick = function () {
+            alert(this.id);
+         };
+         return ele;
+    }
+    function makeBoat(w, h, x, y, id, size){
+         var svgns = "http://www.w3.org/2000/svg";
+         var ele=document.createElementNS(svgns,'rect');
+         ele.setAttributeNS(null,'id',id);
+         ele.setAttributeNS(null,'x',x);
+         ele.setAttributeNS(null,'y',y);
+         ele.setAttributeNS(null,'class','boat draggable');
+         ele.setAttributeNS(null,'width',w*size);
+         ele.setAttributeNS(null,'height',h);
+         ele.setAttributeNS(null,'rx',20);
+         ele.setAttributeNS(null,'ry',20);
+         ele.setAttributeNS(null,'stroke','#333');
+         ele.setAttributeNS(null,'stroke-width','1');
+         ele.setAttributeNS(null,'fill','#ddd');
+         ele.addEventListener('mousedown', startDrag);
+         ele.addEventListener('mousemove', drag);
+         ele.addEventListener('mouseup', endDrag);
+         ele.addEventListener('mouseleave', endDrag);
         
         
+        
+         return ele;
+    }
+    function startDrag(){
+        
+    }
+    function drag(){
+        
+    }
+    function endDrag(){
+
+    }
+        
+
 	 
 	 ///////////////////////////////
 	 //utility stuff
@@ -166,11 +249,26 @@
     <div class="container-fluid">
         <div class="row">
               <div class="col-sm-8">
-                
-
                 <div class="panel panel-primary">
-                    <div class="panel-heading"><span class="glyphicon glyphicon-pawn"></span> Games</div>
-                  <div class="panel-body" id="">
+                  <div class="panel-body" style="height:86%;" id="">
+                      <svg width="100%" height="100%" onload="init(evt)" id="board">
+			              
+		              
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      </svg>
+                      
                       
                   </div>
                 </div><!-- match panel-->
@@ -179,7 +277,9 @@
                 <div class="panel panel-info">
                     <div class="panel-heading" id="vsBox"> P1 VS P2</div>
                   <div class="panel-body" id="">
-                      <button type="button" onclick="giveUp()" class="btn btn-danger">Forfeit</button>
+                      <button type="button" onclick="" class="btn btn-warning">End Turn</button>
+                      <button type="button" onclick="giveUp()" class="btn btn-danger" style="float:right;">Forfeit</button>
+                      
                   </div>
                 </div><!-- game panel-->
                 <div class="panel panel-default">

@@ -52,3 +52,15 @@ hr{
 .info{
     color:red;
 }
+/*game*/
+.attack{
+    cursor:pointer;
+}
+.attack:hover{
+    stroke:#ddd;
+}
+.draggable {
+  cursor: move;
+}
+
+
