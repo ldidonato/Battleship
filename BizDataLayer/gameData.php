@@ -113,7 +113,7 @@
     }
     function addGameInfoData($player,$gid){
         global $mysqli;
-        $sql="INSERT INTO `BattleshipGameInfo`(`GameID`, `turn`, `boat1Hits`, `boat2Hits`, `started`, `p1Ready`, `p2Ready`) VALUES (?,?,2,3,'no','no','no')";
+        $sql="INSERT INTO `BattleshipGameInfo`(`GameID`, `turn`, `p1boat1Hits`, `p2boat1Hits`, `p1boat2Hits`, `p2boat2Hits`, `started`, `p1Ready`, `p2Ready`) VALUES (?,?,2,2,3,3,'no','no','no')";
         try{
             if($stmt=$mysqli->prepare($sql)){
                 $stmt->bind_param("is",$gid,$player);

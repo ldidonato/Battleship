@@ -317,9 +317,9 @@
                             MyXHR('get',{method:'startedYes',a:'game'}).done(function(json3){
                                 console.log("started yup");
                                 
-                            });//getgameinfo
+                            });
                         }
-                     });//getgameinfo
+                     });
                       
                   });//startgame
            
@@ -340,8 +340,68 @@
 			var data = JSON.parse(json);
              if(data[0].started == 'yes'){
                  disableStartbtn();
+                 updateWidget();
+                 //this is where all the mush goes for playing
+                 
+                 
+                 
+                 
+                 
+                 
              }    
 		});//check if started
+     }
+     function updateWidget(){
+         MyXHR('get',{method:'getGameInfo',a:'game'}).done(function(info){
+             var infoData = JSON.parse(info);
+             MyXHR('get',{method:'getGame',a:'game'}).done(function(game){
+			     var gameData = JSON.parse(game);
+                 var you = document.getElementById("userBox").innerHTML;
+                 //determine enemy boat count and win system
+                 var enemyboatcount=2;
+                 var yourboatcount=2;
+                 if(you == gameData[0].Player1){
+                     //you are player 1
+                     if(infoData[0].p2boat1Hits == 0){
+                         enemyboatcount--;
+                     }
+                     if(infoData[0].p2boat2Hits == 0){
+                         enemyboatcount--;
+                     }
+                     if(infoData[0].p1boat1Hits == 0){
+                         yourboatcount--;
+                     }
+                     if(infoData[0].p1boat2Hits == 0){
+                         yourboatcount--;
+                     }
+                 }else{
+                     //you are player 2
+                     if(infoData[0].p1boat1Hits == 0){
+                         enemyboatcount--;
+                     }
+                     if(infoData[0].p1boat2Hits == 0){
+                         enemyboatcount--;
+                     }
+                     if(infoData[0].p2boat1Hits == 0){
+                         yourboatcount--;
+                     }
+                     if(infoData[0].p2boat2Hits == 0){
+                         yourboatcount--;
+                     }
+                 }
+                 document.getElementById("enemyDiv").innerHTML="<span style='float:right'><span class='label label-primary'>"+enemyboatcount+"</span> Enemy Boats Remaining </span>";
+                 if(yourboatcount == 0){
+                     giveUp();
+                 }else{
+                     if(you == infoData[0].turn){
+                        document.getElementById("turnDiv").innerHTML ="Turn <span class='label label-success'>"+infoData[0].turn+"</span>";
+                     }else{
+                         document.getElementById("turnDiv").innerHTML ="Turn <span class='label label-danger'>"+infoData[0].turn+"</span>";
+                     }
+                 }
+                 
+            });//getgame
+         });//getinfo
      }
 
 	 
