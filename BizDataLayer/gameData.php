@@ -111,8 +111,23 @@
             return false;
         }
     }
-    //NOT USED
-/*
+    function addGameInfoData($player,$gid){
+        global $mysqli;
+        $sql="INSERT INTO `BattleshipGameInfo`(`GameID`, `turn`, `boat1Hits`, `boat2Hits`, `started`, `p1Ready`, `p2Ready`) VALUES (?,?,2,3,'no','no','no')";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("is",$gid,$player);
+                $stmt->execute();
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while creating adding game data");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
     function getLatestGameID($Player1, $Player2){
         global $mysqli;
         $sql="SELECT GameID FROM BattleshipGameList WHERE Player1=? AND Player2=? ORDER BY GameID DESC LIMIT 0,1";
@@ -129,7 +144,7 @@
             log_error($e, $sql, null);
             return false;
         }
-    }*/
+    }
     function getGameByID($gid){
         global $mysqli;
         $sql="SELECT * FROM BattleshipGameList WHERE GameID=?";
@@ -200,7 +215,108 @@
             return false;
         }
     }
-
+    function checkifStartedData($gid){
+        global $mysqli;
+        $sql="SELECT `started` FROM `BattleshipGameInfo` WHERE `GameID` = ?";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("i",$gid);
+                $data=returnJson($stmt);
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while checking if started");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
+    function readyPlayer1($gid){
+        global $mysqli;
+        $sql="UPDATE `BattleshipGameInfo` SET `p1Ready`='yes' WHERE `GameID`=?";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("i",$gid);
+                $stmt->execute();
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while denying someone");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
+    function readyPlayer2($gid){
+        global $mysqli;
+        $sql="UPDATE `BattleshipGameInfo` SET `p2Ready`='yes' WHERE `GameID`=?";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("i",$gid);
+                $stmt->execute();
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while denying someone");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
+    function getGameByInfoID($gid){
+        global $mysqli;
+        $sql="SELECT * FROM BattleshipGameInfo WHERE GameID=?";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("i",$gid);
+                $data=returnJson($stmt);
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while getting game by id");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
+    function allReadyData($gid){
+        global $mysqli;
+        $sql="SELECT * FROM `BattleshipGameInfo` WHERE `p1Ready`='yes' AND `p2Ready`='yes' AND `GameID`=?";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("i",$gid);
+                $data=returnJson($stmt);
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while getting game by id");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
+    function startedYesData($gid){
+        global $mysqli;
+        $sql="UPDATE `BattleshipGameInfo` SET `started`='yes' WHERE `GameID`=?";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("i",$gid);
+                $stmt->execute();
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while denying someone");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
 
 
 

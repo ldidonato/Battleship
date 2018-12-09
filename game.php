@@ -11,6 +11,7 @@
     window.setInterval(function(){
         checkWinner();
         getLocalChat();
+        checkifStarted();
     }, 2000);
     //runs every 20 mins
     window.setInterval(function(){
@@ -52,16 +53,17 @@
     function checkWinner(){
         MyXHR('get',{method:'getGame',a:'game'}).done(function(json){
 			var data = JSON.parse(json);
-            if(data[0].winner !== ""){
-                alert(data[0].winner+" has won Battleship!");
-                MyXHR('get',{method:'endGame',a:'game'}).done(function(json){
-                    console.log("game has ended");
-			         window.location.href = "/~lad4284/442/Battleship/index.html";
-                });
+            if(data !== null){
+                if(data[0].winner !== ""){
+                    alert(data[0].winner+" has won Battleship!");
+                    MyXHR('get',{method:'endGame',a:'game'}).done(function(json){
+                        console.log("game has ended");
+                         window.location.href = "/~lad4284/442/Battleship/index.html";
+                    });
+                }
             }
 		});
     }
-    
         //Chat stuff
     function getLocalChat(){
         MyXHR('get',{method:'getLocalChat',a:'chat'}).done(function(json){
@@ -151,9 +153,9 @@
          ele.setAttributeNS(null,'stroke-width','3');
          ele.setAttributeNS(null,'fill','#d9edf7');
          ele.setAttributeNS(null,'class',cla);
-         ele.onclick = function () {
+         /*ele.onclick = function () {
             alert(this.id);
-         };
+         };*/
          return ele;
     }
     function makeBoat(w, h, x, y, id, size){
@@ -256,7 +258,7 @@
                     
                     var nextcol = parseInt(tileid[8])+1;
                     if(nextcol == 5 || nextcol == 6){
-                        tilelist[i].style.fill = "#f0ad4e";
+                      //  tilelist[i].style.fill = "#f0ad4e";
                     }else{
                         nexttile = document.getElementById("pId_d_"+tileid[6]+"_"+nextcol);
                         nexttile.style.fill = "#5cb85c";
@@ -285,6 +287,62 @@
             }//for
         }
     }//make draggable
+        
+     ///////////////////////////////
+	 //play the actual game stuff
+	 ///////////////////////////////
+     function startGame(){
+         var tilelist = document.getElementsByClassName("defend");
+         var count = 0;
+         for(var i=0;i<tilelist.length;i++){
+             if(tilelist[i].style.fill == "rgb(92, 184, 92)"){
+                 count++;
+             }
+         }
+         //make sure boats are valid
+         if(count != 5){
+             alert("Invalid boat setup, please make sure there are 5 green tiles.");
+         }else{
+              disableStartbtn();
+              //tell server you are ready
+             
+              MyXHR('get',{method:'getGame',a:'game'}).done(function(json){
+			     var data = JSON.parse(json);
+                 var send = data[0].Player1+"|"+data[0].Player2;
+                  MyXHR('get',{method:'startGame',a:'game',data:send}).done(function(json2){
+                     MyXHR('get',{method:'allReady',a:'game'}).done(function(json3){
+                        //if both players are ready
+                        var data3 = JSON.parse(json3);
+                        if(data3 != null){
+                            MyXHR('get',{method:'startedYes',a:'game'}).done(function(json3){
+                                console.log("started yup");
+                                
+                            });//getgameinfo
+                        }
+                     });//getgameinfo
+                      
+                  });//startgame
+           
+		      });//getgame
+            
+             
+
+             //submit defense board
+             
+             
+         }//boat validate
+     }
+     function disableStartbtn(){
+         document.getElementById("startDiv").innerHTML = "<button type='button' class='btn btn-success' disabled>Start Game</button>";
+     }
+     function checkifStarted(){
+         MyXHR('get',{method:'checkifStarted',a:'game'}).done(function(json){
+			var data = JSON.parse(json);
+             if(data[0].started == 'yes'){
+                 disableStartbtn();
+             }    
+		});//check if started
+     }
 
 	 
 	 ///////////////////////////////
@@ -353,17 +411,6 @@
 		              
                       
                       
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
                       </svg>
                       
                       
@@ -374,8 +421,13 @@
                 <div class="panel panel-info">
                     <div class="panel-heading" id="vsBox"> P1 VS P2</div>
                   <div class="panel-body" id="">
-                      Turn: Setup
-                      <button type="button" onclick="" class="btn btn-success">Start Game</button>
+                      <span id="turnDiv">Turn <span class="label label-warning">Setup</span></span> 
+                      
+                      <span id="enemyDiv"><span style="float:right"><span class="label label-primary">2</span> Enemy Boats Remaining </span></span><br><br>
+                      <hr>
+                      <span id="startDiv">
+                      <button type="button" onclick="startGame()" class="btn btn-success">Start Game</button>
+                          </span>
                       <button type="button" onclick="giveUp()" class="btn btn-danger" style="float:right;">Forfeit</button>
                       
                   </div>

@@ -50,12 +50,18 @@
         //you = player1, opponent = player2
         //Player1 | Player2
         echo($you."|".$opponent);
-    }/*
-    function getGameID($d){
-        $dataArr = explode("|",$d);
-        $response = getLatestGameID($dataArr[0],$dataArr[1]);
-        echo($response);
-    }*/
+    }
+    function getLastestGID($opponent){
+        session_start();
+        $you = $_SESSION["id"];
+        //you = player1, opponent = player2
+        echo(getLatestGameID($you,$opponent));
+    }
+    function addGameInfo($gid){
+        session_start();
+        $you = $_SESSION["id"];
+        echo(addGameInfoData($you,$gid));
+    }
     function getGames(){
         session_start();
         $you = $_SESSION["id"];
@@ -75,6 +81,11 @@
         $gid = $_SESSION["GameID"];
         echo(getGameByID($gid));
     }
+    function getGameInfo(){
+        session_start();
+        $gid = $_SESSION["GameID"];
+        echo(getGameByInfoID($gid));
+    }
     function endGame(){
         session_start();
         $gid = $_SESSION["GameID"];
@@ -92,9 +103,38 @@
             loseGameData($dataArr[0],$gid);
             echo($d);
         }
-        
-        
     }
+    function startGame($d){
+        $dataArr = explode("|",$d);
+        //player1|player2
+        session_start();
+        $you = $_SESSION["id"];
+        $gid = $_SESSION["GameID"];
+        if($you == $dataArr[0] ){
+            readyPlayer1($gid);
+            echo("ready player 1");
+        }else if($you == $dataArr[1]){
+            echo("ready player 2");
+            readyPlayer2($gid);
+        }
+    }
+    function checkifStarted(){
+        session_start();
+        $gid = $_SESSION["GameID"];
+        echo(checkifStartedData($gid));
+    }
+    function allReady(){
+        session_start();
+        $gid = $_SESSION["GameID"];
+        echo(allReadyData($gid));
+    }
+    function startedYes(){
+        session_start();
+        $gid = $_SESSION["GameID"];
+        echo(startedYesData($gid));
+    }
+   
+
 
 ?>
 

@@ -150,15 +150,20 @@
             var data = json2.split("|");
             var player1 = data[0];
             var player2 = data[1];
-            /*MyXHR('get',{method:'getGameID',a:'game',data:json2}).done(function(json){
-                var data = JSON.parse(json);
-                var gid = data[0].GameID;
-                console.log("accepting challenge: you vs "+opponent+" as game "+gid);
-            }); //getGameID*/
             MyXHR('get',{method:'removeChallengeA',a:'game',data:opponent}).done(function(json2){
                 console.log("removing challenge: you vs "+opponent);
                 console.log(json2)
             }); //remove challengeA
+            
+            MyXHR('get',{method:'getLastestGID',a:'game',data:opponent}).done(function(response){
+                var data = JSON.parse(response);
+                var gid = data[0].GameID;
+                console.log(gid);
+                MyXHR('get',{method:'addGameInfo',a:'game',data:gid}).done(function(data2){
+                    console.log(data2);
+                }); //create row in game info
+                
+            }); //getGID
             
         }); //acceptchallenge
      }
