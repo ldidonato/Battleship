@@ -201,6 +201,23 @@
                 }//if
           }
           function endDrag(evt) {
+              if(selectedElement){
+                    if(selectedElement.id == "boat1"){
+                        var otherboat = "boat2"
+                    }else{
+                        var otherboat = "boat1"
+                    }
+                  
+                   //add new green tiles
+                   var tilelist = document.getElementsByClassName("defend");
+                   for(var i=0;i<tilelist.length;i++){
+                       if(tilelist[i].style.fill == "rgb(92, 184, 92)" && !tilelist[i].classList.contains(otherboat)){
+                           tilelist[i].classList.add(selectedElement.id);
+                       }else{
+                          tilelist[i].classList.remove(selectedElement.id);
+                       }
+                   }//tilelist
+               }//if
                selectedElement = null;
           }
           function getMousePosition(evt) {
@@ -211,44 +228,61 @@
               };
           }
         function lightUpBoard(selectedElement){
-              var tilelist = document.getElementsByClassName("defend");
-                    var bx = selectedElement.getBBox().x;
-                    var by = selectedElement.getBBox().y;
-                    var bw = selectedElement.getBBox().width;
-                    var bh = selectedElement.getBBox().height;
-                    var bULC = [bx, by];
-                    var bURC = [bx+bw, by];
-                    var bLLC = [bx, by+bh];
-                    var bLRC = [bx+bw, by+bh];
-                    for(var i=0;i<tilelist.length;i++){
-                        var tx = tilelist[i].getBBox().x;
-                        var ty =  tilelist[i].getBBox().y;
-                        var tw =  tilelist[i].getBBox().width;
-                        var th =  tilelist[i].getBBox().height;
-                        var tULC = [tx, ty];
-                        var tURC = [tx+tw, ty];
-                        var tLLC = [tx, ty+th];
-                        var tLRC = [tx+tw, ty+th];
-                        var nexttile;
-                        //500 < windowsize && windowsize < 600
-                        //[0] = x and [1] = y
-                        if((tULC[0] < bULC[0] && bULC[0] < tURC[0])&&(tULC[1] < bULC[1] && bULC[1] < tLLC[1])){
-                            tilelist[i].style.fill = "#5cb85c";
-                            var tileid = tilelist[i].id;
-                            var nextcol = parseInt(tileid[8])+1;
-                            if(nextcol == 5){
-                                tilelist[i].style.fill = "#f0ad4e";
-                            }else{
-                                nexttile = document.getElementById("pId_d_"+tileid[6]+"_"+nextcol);
-                                nexttile.style.fill = "#5cb85c";
-                            }
-                            
-                        }else{
-                            if(tilelist[i] != nexttile){
-                                tilelist[i].style.fill = "#d9edf7";
+            var tilelist = document.getElementsByClassName("defend");
+            var bx = selectedElement.getBBox().x;
+            var by = selectedElement.getBBox().y;
+            var bw = selectedElement.getBBox().width;
+            var bh = selectedElement.getBBox().height;
+            var bULC = [bx, by];
+            var bURC = [bx+bw, by];
+            var bLLC = [bx, by+bh];
+            var bLRC = [bx+bw, by+bh];
+            for(var i=0;i<tilelist.length;i++){
+                var tx = tilelist[i].getBBox().x;
+                var ty =  tilelist[i].getBBox().y;
+                var tw =  tilelist[i].getBBox().width;
+                var th =  tilelist[i].getBBox().height;
+                var tULC = [tx, ty];
+                var tURC = [tx+tw, ty];
+                var tLLC = [tx, ty+th];
+                var tLRC = [tx+tw, ty+th];
+                var nexttile;
+                var nexttile2;
+                //500 < windowsize && windowsize < 600
+                //[0] = x and [1] = y
+                if((tULC[0] < bULC[0] && bULC[0] < tURC[0])&&(tULC[1] < bULC[1] && bULC[1] < tLLC[1])){
+                    tilelist[i].style.fill = "#5cb85c";
+                    var tileid = tilelist[i].id;
+                    
+                    var nextcol = parseInt(tileid[8])+1;
+                    if(nextcol == 5 || nextcol == 6){
+                        tilelist[i].style.fill = "#f0ad4e";
+                    }else{
+                        nexttile = document.getElementById("pId_d_"+tileid[6]+"_"+nextcol);
+                        nexttile.style.fill = "#5cb85c";
+                        if(bw/45 == 3){
+                          nextcol++;
+                          nexttile2 = document.getElementById("pId_d_"+tileid[6]+"_"+nextcol);
+                            if(nexttile2 != null){
+                                nexttile2.style.fill = "#5cb85c";
                             }
                         }
-                    }//for
+                    }
+
+                }else{
+                    if(selectedElement.id == "boat1"){
+                        var otherboat = "boat2"
+                    }else{
+                        var otherboat = "boat1"
+                    }
+                    
+                    if(tilelist[i].classList.contains(otherboat)){
+                        tilelist[i].style.fill = "#5cb85c";
+                    }else if(tilelist[i] != nexttile && tilelist[i] != nexttile2){
+                        tilelist[i].style.fill = "#d9edf7";
+                    }
+                }
+            }//for
         }
     }//make draggable
 
