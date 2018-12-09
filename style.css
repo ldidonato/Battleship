@@ -59,8 +59,16 @@ hr{
 .attack:hover{
     stroke:#ddd;
 }
+.noattack{
+    cursor:no-drop !important;
+}
+.noattack:hover{
+    stroke:rgb(51, 51, 51) !important;
+}
 .draggable {
   cursor: move;
 }
-
+.nodraggable {
+  cursor: no-drop;
+}
 

@@ -340,6 +340,11 @@
 			var data = JSON.parse(json);
              if(data[0].started == 'yes'){
                  disableStartbtn();
+                 //make the ships not draggable
+                 for(var i=0;i<document.getElementsByClassName('draggable').length;i++){
+                     document.getElementsByClassName('draggable')[i].classList.add("nodraggable");
+                     document.getElementsByClassName('draggable')[i].classList.remove("draggable");
+                 }
                  updateWidget();
                  //this is where all the mush goes for playing
                  
@@ -393,10 +398,24 @@
                  if(yourboatcount == 0){
                      giveUp();
                  }else{
+                     var attackpegs = document.getElementsByClassName("attack");
                      if(you == infoData[0].turn){
                         document.getElementById("turnDiv").innerHTML ="Turn <span class='label label-success'>"+infoData[0].turn+"</span>";
+                         
+                         //turn on fireing mode
+                         for(var i=0;i<attackpegs.length;i++){
+                             attackpegs[i].classList.remove("noattack");
+                         }
+                         
                      }else{
+                         //if it is NOT your turn
                          document.getElementById("turnDiv").innerHTML ="Turn <span class='label label-danger'>"+infoData[0].turn+"</span>";
+                         
+                         //turn off fireing mode
+                         for(var i=0;i<attackpegs.length;i++){
+                             attackpegs[i].classList.add("noattack");
+                         }
+                         
                      }
                  }
                  
