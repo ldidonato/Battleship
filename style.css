@@ -38,7 +38,7 @@ h2{
 }
 #localChatBody{
     font-family: monospace;
-    height:50%;
+    height:48%;
     overflow-y: auto;
 }
 hr{

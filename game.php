@@ -157,26 +157,27 @@
                      if(json == "[{\""+dID+"\":\"full\"}]"){
                          console.log("hit");
                          MyXHR('get',{method:'submitHitP1',a:'game',data:dID}).done(function(json){
-                             console.log(json);
                          });
                          MyXHR('get',{method:'submitDamageP1',a:'game',data:dID}).done(function(json){
-                             console.log(json);
                          });
                      }else{
                          console.log("miss");
                          MyXHR('get',{method:'submitMissP1',a:'game',data:dID}).done(function(json){
-                             console.log(json);
                          });
                          MyXHR('get',{method:'submitNoDamageP1',a:'game',data:dID}).done(function(json){
-                             console.log(json);
                          });
                      }
                  });
+                 /*
+                 //update boat count
+                 var yourboat1hits = 2;
+                 var yourboat2hits = 3;
+                 //nope not doing it too much work*/
+                 
                  //switch turns
                  var turnswitch = gameData[0].Player2;
-                 MyXHR('get',{method:'switchTurn',a:'game',data:turnswitch}).done(function(json){
-
-                 });
+                 MyXHR('get',{method:'switchTurn',a:'game',data:turnswitch}).done(function(json){});
+                 
              }else{
                  //same thing but player 2
                  var dID = setCharAt(id,4,'d');
@@ -421,15 +422,13 @@
                    }
                  if(you == gameData[0].Player1){
                      MyXHR('get',{method:'submitDefenseP1',a:'game',data:greentiles}).done(function(json){
-                         console.log("submit p1");
-                         console.log(json);
+                        
                      });
                       MyXHR('get',{method:'submitAttackP1',a:'game',data:greentiles}).done(function(json){
                         });
                  }else{
                      MyXHR('get',{method:'submitDefenseP2',a:'game',data:greentiles}).done(function(json){
-                         console.log("submit p2");
-                         console.log(json);
+                         
                      });
                      MyXHR('get',{method:'submitAttackP2',a:'game',data:greentiles}).done(function(json){
                         });
@@ -500,8 +499,18 @@
                          yourboatcount--;
                      }
                  }
-                 document.getElementById("enemyDiv").innerHTML="<span style='float:right'><span class='label label-primary'>"+enemyboatcount+"</span> Enemy Boats Remaining </span>";
-                 if(yourboatcount == 0){
+                 //document.getElementById("enemyDiv").innerHTML="<span style='float:right'><span class='label label-primary'>"+enemyboatcount+"</span> Enemy Boats Remaining </span>";
+                 
+                 
+                 //win system
+                 var hitcount = 5;
+                 var defensetiles = document.getElementsByClassName("defend");
+                 for(var i=0;i<defensetiles.length;i++){
+                     if(defensetiles[i].style.fill == "rgb(212, 63, 58)"){
+                         hitcount--;
+                     }
+                 }
+                 if(hitcount == 0){
                      giveUp();
                  }else{
                      var attackpegs = document.getElementsByClassName("attack");
@@ -684,7 +693,7 @@
                   <div class="panel-body" id="">
                       <span id="turnDiv">Turn <span class="label label-warning">Setup</span></span> 
                       
-                      <span id="enemyDiv"><span style="float:right"><span class="label label-primary">2</span> Enemy Boats Remaining </span></span><br><br>
+                      <!--<span id="enemyDiv"><span style="float:right"><span class="label label-primary">2</span> Enemy Boats Remaining </span></span><br><br>-->
                       <hr>
                       <span id="startDiv">
                       <button type="button" onclick="startGame()" class="btn btn-success">Start Game</button>
