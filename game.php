@@ -553,9 +553,12 @@
                              var data = JSON.parse(json)[0][id];
                              if(data=="miss"){
                                  attacktiles[i].style.fill= "white";
+                                 attacktiles[i].classList.add("noattack");
                              }else if(data== "hit"){
                                  attacktiles[i].style.fill= "#d43f3a";
+                                 attacktiles[i].classList.add("noattack");
                              }
+                             
                          }//for
 
                      });
@@ -567,8 +570,10 @@
                              var data = JSON.parse(json)[0][id];
                              if(data=="miss"){
                                  attacktiles[i].style.fill= "white";
+                                 attacktiles[i].classList.add("noattack");
                              }else if(data== "hit"){
                                  attacktiles[i].style.fill= "#d43f3a";
+                                 attacktiles[i].classList.add("noattack");
                              }
                          }//for
 
