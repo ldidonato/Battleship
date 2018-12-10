@@ -140,7 +140,80 @@
          
          
      }//init
-        
+    function setCharAt(str,index,chr) {
+        if(index > str.length-1) return str;
+        return str.substr(0,index) + chr + str.substr(index+1);
+    }
+    function fire(id){
+         MyXHR('get',{method:'getGame',a:'game'}).done(function(game){
+             var gameData = JSON.parse(game);
+             var you = document.getElementById("userBox").innerHTML;
+             if(you == gameData[0].Player1){
+                 var dID = setCharAt(id,4,'d');
+                 MyXHR('get',{method:'P1Fire',a:'game',data:dID}).done(function(json){
+                     //var hitData = JSON.parse(json);
+                     json = json.replace(/^\s+|\s+$/gm,'');
+                     //If sucessful hit
+                     if(json == "[{\""+dID+"\":\"full\"}]"){
+                         console.log("hit");
+                         MyXHR('get',{method:'submitHitP1',a:'game',data:dID}).done(function(json){
+                             console.log(json);
+                         });
+                         MyXHR('get',{method:'submitDamageP1',a:'game',data:dID}).done(function(json){
+                             console.log(json);
+                         });
+                     }else{
+                         console.log("miss");
+                         MyXHR('get',{method:'submitMissP1',a:'game',data:dID}).done(function(json){
+                             console.log(json);
+                         });
+                         MyXHR('get',{method:'submitNoDamageP1',a:'game',data:dID}).done(function(json){
+                             console.log(json);
+                         });
+                     }
+                 });
+                 //switch turns
+                 var turnswitch = gameData[0].Player2;
+                 MyXHR('get',{method:'switchTurn',a:'game',data:turnswitch}).done(function(json){
+
+                 });
+             }else{
+                 //same thing but player 2
+                 var dID = setCharAt(id,4,'d');
+                 MyXHR('get',{method:'P2Fire',a:'game',data:dID}).done(function(json){
+                     //var hitData = JSON.parse(json);
+                     json = json.replace(/^\s+|\s+$/gm,'');
+                     //If sucessful hit
+                     if(json == "[{\""+dID+"\":\"full\"}]"){
+                         console.log("hit");
+                         MyXHR('get',{method:'submitHitP2',a:'game',data:dID}).done(function(json){
+                             console.log(json);
+                         });
+                         MyXHR('get',{method:'submitDamageP2',a:'game',data:dID}).done(function(json){
+                             console.log(json);
+                         });
+                     }else{
+                         console.log("miss");
+                         MyXHR('get',{method:'submitMissP2',a:'game',data:dID}).done(function(json){
+                             console.log(json);
+                         });
+                         MyXHR('get',{method:'submitNoDamageP2',a:'game',data:dID}).done(function(json){
+                             console.log(json);
+                         });
+                     }
+                 });
+
+
+                //switch turns
+                 var turnswitch = gameData[0].Player1;
+                 MyXHR('get',{method:'switchTurn',a:'game',data:turnswitch}).done(function(json){
+
+                 });
+             }
+             
+             
+         });
+    }
     function makePeg(cx, cy, id, cla){
          var svgns = "http://www.w3.org/2000/svg";
          var ele=document.createElementNS(svgns,'rect');
@@ -153,9 +226,19 @@
          ele.setAttributeNS(null,'stroke-width','3');
          ele.setAttributeNS(null,'fill','#d9edf7');
          ele.setAttributeNS(null,'class',cla);
-         /*ele.onclick = function () {
-            alert(this.id);
-         };*/
+         ele.onclick = function () {
+               MyXHR('get',{method:'checkifStarted',a:'game'}).done(function(json){
+                  var data = JSON.parse(json);
+                    if(data[0].started == 'yes'){
+                        if(!this.classList.contains("noattack") && this.classList.contains("attack")){
+                            fire(this.id);
+                        }//top peg and your turn
+                    }//has game started
+              }.bind(this));
+             
+             
+             
+         };
          return ele;
     }
     function makeBoat(w, h, x, y, id, size){
@@ -305,7 +388,6 @@
          }else{
               disableStartbtn();
               //tell server you are ready
-             
               MyXHR('get',{method:'getGame',a:'game'}).done(function(json){
 			     var data = JSON.parse(json);
                  var send = data[0].Player1+"|"+data[0].Player2;
@@ -324,10 +406,37 @@
                   });//startgame
            
 		      });//getgame
-            
-             
 
              //submit defense board
+             MyXHR('get',{method:'getGame',a:'game'}).done(function(game){
+			     var gameData = JSON.parse(game);
+                 var you = document.getElementById("userBox").innerHTML;
+                 
+                 //get green tiles
+                 var greentiles = "";
+                   for(var i=0;i<tilelist.length;i++){
+                       if(tilelist[i].style.fill == "rgb(92, 184, 92)"){
+                           greentiles += tilelist[i].id+"|";
+                       }
+                   }
+                 if(you == gameData[0].Player1){
+                     MyXHR('get',{method:'submitDefenseP1',a:'game',data:greentiles}).done(function(json){
+                         console.log("submit p1");
+                         console.log(json);
+                     });
+                      MyXHR('get',{method:'submitAttackP1',a:'game',data:greentiles}).done(function(json){
+                        });
+                 }else{
+                     MyXHR('get',{method:'submitDefenseP2',a:'game',data:greentiles}).done(function(json){
+                         console.log("submit p2");
+                         console.log(json);
+                     });
+                     MyXHR('get',{method:'submitAttackP2',a:'game',data:greentiles}).done(function(json){
+                        });
+                 }
+                 
+             });
+             
              
              
          }//boat validate
@@ -347,9 +456,6 @@
                  }
                  updateWidget();
                  //this is where all the mush goes for playing
-                 
-                 
-                 
                  
                  
                  
@@ -406,7 +512,6 @@
                          for(var i=0;i<attackpegs.length;i++){
                              attackpegs[i].classList.remove("noattack");
                          }
-                         
                      }else{
                          //if it is NOT your turn
                          document.getElementById("turnDiv").innerHTML ="Turn <span class='label label-danger'>"+infoData[0].turn+"</span>";
@@ -415,13 +520,90 @@
                          for(var i=0;i<attackpegs.length;i++){
                              attackpegs[i].classList.add("noattack");
                          }
-                         
                      }
                  }
+                 
+                 //update board colors
+                 updateBoardColors(you, gameData[0].Player1);
+                 
+                 
                  
             });//getgame
          });//getinfo
      }
+     
+     function updateBoardColors(you, player1){
+         
+                //ATTACK BOARD
+                 var attacktiles = document.getElementsByClassName("attack");  
+                 if(you == player1){
+                     MyXHR('get',{method:'getP1AttackBoard',a:'game'}).done(function(json){
+                         for(var i=0; i<attacktiles.length;i++){
+                             var id = attacktiles[i].id;
+                             id = setCharAt(id,4,'d');
+                             var data = JSON.parse(json)[0][id];
+                             if(data=="miss"){
+                                 attacktiles[i].style.fill= "white";
+                             }else if(data== "hit"){
+                                 attacktiles[i].style.fill= "#d43f3a";
+                             }
+                         }//for
+
+                     });
+                 }else{
+                     MyXHR('get',{method:'getP2AttackBoard',a:'game'}).done(function(json){
+                         for(var i=0; i<attacktiles.length;i++){
+                             var id = attacktiles[i].id;
+                             id = setCharAt(id,4,'d');
+                             var data = JSON.parse(json)[0][id];
+                             if(data=="miss"){
+                                 attacktiles[i].style.fill= "white";
+                             }else if(data== "hit"){
+                                 attacktiles[i].style.fill= "#d43f3a";
+                             }
+                         }//for
+
+                     });
+                 }//ifelse
+         
+                 //DEFENSE BOARD
+                 var defensetiles = document.getElementsByClassName("defend");  
+                 if(you == player1){
+                     MyXHR('get',{method:'getP1DefenseBoard',a:'game'}).done(function(json){
+                         for(var i=0; i<defensetiles.length;i++){
+                             var id = defensetiles[i].id;
+                             id = setCharAt(id,4,'d');
+                             var data = JSON.parse(json)[0][id];
+                             if(data=="miss"){
+                                 defensetiles[i].style.fill= "white";
+                             }else if(data== "hit"){
+                                 defensetiles[i].style.fill= "#d43f3a";
+                             }else if(data== "full"){
+                                 defensetiles[i].style.fill= "rgb(92, 184, 92)";
+                             }
+                         }//for
+
+                     });
+                 }else{
+                     MyXHR('get',{method:'getP2DefenseBoard',a:'game'}).done(function(json){
+                         for(var i=0; i<defensetiles.length;i++){
+                             var id = defensetiles[i].id;
+                             id = setCharAt(id,4,'d');
+                             var data = JSON.parse(json)[0][id];
+                             if(data=="miss"){
+                                 defensetiles[i].style.fill= "white";
+                             }else if(data== "hit"){
+                                 defensetiles[i].style.fill= "#d43f3a";
+                             }else if(data== "full"){
+                                 defensetiles[i].style.fill= "rgb(92, 184, 92)";
+                             }
+                         }//for
+
+                     });
+                 }//ifelse
+                 
+         
+     }//update
 
 	 
 	 ///////////////////////////////

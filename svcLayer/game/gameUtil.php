@@ -133,7 +133,124 @@
         $gid = $_SESSION["GameID"];
         echo(startedYesData($gid));
     }
-   
+    function submitDefenseP1($d){
+        session_start();
+        $gid = $_SESSION["GameID"];
+        $dataArr = explode("|",$d);
+        echo(submitDefenseP1Data($dataArr[0],$dataArr[1],$dataArr[2],$dataArr[3],$dataArr[4],$gid));
+    }
+    function submitDefenseP2($d){
+        session_start();
+        $gid = $_SESSION["GameID"];
+        $dataArr = explode("|",$d);
+        echo(submitDefenseP2Data($dataArr[0],$dataArr[1],$dataArr[2],$dataArr[3],$dataArr[4],$gid));
+    }
+    function submitAttackP1(){
+        session_start();
+        $gid = $_SESSION["GameID"];
+        submitAttackP1Data($gid);
+    }
+    function submitAttackP2(){
+        session_start();
+        $gid = $_SESSION["GameID"];
+        submitAttackP2Data($gid);
+    }
+    function switchTurn($d){
+        session_start();
+        $gid = $_SESSION["GameID"];
+        switchTurnData($d,$gid);
+    }
+    function P1Fire($d){
+        //player1 fires on player2 defense board
+        //pull defense board at it
+        session_start();
+        $gid = $_SESSION["GameID"];
+        echo(getP1DefenseByID($d,$gid));
+    }
+    function submitHitP1($id){
+        //p1 got a hit update p1's attack board
+        session_start();
+        $gid = $_SESSION["GameID"];
+        echo(submitHitP1Data($id,$gid));
+    }
+    function submitDamageP1($id){
+        //p1 got a hit update p2's defense board
+        session_start();
+        $gid = $_SESSION["GameID"];
+        echo(submitDamageP2Data($id,$gid));
+    }
+    function submitMissP1($id){
+        //p1 got a hit update p1's attack board
+        session_start();
+        $gid = $_SESSION["GameID"];
+        echo(submitMissP1Data($id,$gid));
+    }
+    function submitNoDamageP1($id){
+        //p1 got a hit update p2's defense board
+        session_start();
+        $gid = $_SESSION["GameID"];
+        echo(submitNoDamageP2Data($id,$gid));
+    }
+    
+
+    function P2Fire($d){
+        //player1 fires on player2 defense board
+        //pull defense board at it
+        session_start();
+        $gid = $_SESSION["GameID"];
+        echo(getP2DefenseByID($d,$gid));
+    }
+    function submitHitP2($id){
+        //p1 got a hit update p1's attack board
+        session_start();
+        $gid = $_SESSION["GameID"];
+        echo(submitHitP2Data($id,$gid));
+    }
+    function submitDamageP2($id){
+        //p1 got a hit update p2's defense board
+        session_start();
+        $gid = $_SESSION["GameID"];
+        echo(submitDamageP1Data($id,$gid));
+    }
+    function submitMissP2($id){
+        //p1 got a hit update p1's attack board
+        session_start();
+        $gid = $_SESSION["GameID"];
+        echo(submitMissP2Data($id,$gid));
+    }
+    function submitNoDamageP2($id){
+        //p1 got a hit update p2's defense board
+        session_start();
+        $gid = $_SESSION["GameID"];
+        echo(submitNoDamageP1Data($id,$gid));
+    }
+
+
+    function getP1AttackBoard(){
+        session_start();
+        $gid = $_SESSION["GameID"];
+        echo(getP1AttackBoardData($gid));
+    }
+
+    function getP2AttackBoard(){
+        session_start();
+        $gid = $_SESSION["GameID"];
+        echo(getP2AttackBoardData($gid));
+    }
+
+    function getP1DefenseBoard(){
+        session_start();
+        $gid = $_SESSION["GameID"];
+        echo(getP1DefenseBoardData($gid));
+    }
+
+    function getP2DefenseBoard(){
+        session_start();
+        $gid = $_SESSION["GameID"];
+        echo(getP2DefenseBoardData($gid));
+    }
+
+
 
 
 ?>

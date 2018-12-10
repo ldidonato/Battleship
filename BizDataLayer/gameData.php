@@ -317,8 +317,339 @@
             return false;
         }
     }
+    function submitDefenseP1Data($a,$b,$c,$d,$e,$gid){
+        global $mysqli;
+        $sql="INSERT INTO `BattleshipP1DefenseBoard`(`GameID`,".$a.",".$b.",".$c.",".$d.",".$e.") VALUES (?,'full','full','full','full','full')";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("i",$gid);
+                $stmt->execute();
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while submitting p1 defense data");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
+    function submitDefenseP2Data($a,$b,$c,$d,$e,$gid){
+        global $mysqli;
+        $sql="INSERT INTO `BattleshipP2DefenseBoard`(`GameID`,".$a.",".$b.",".$c.",".$d.",".$e.") VALUES (?,'full','full','full','full','full')";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("i",$gid);
+                $stmt->execute();
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while submitting p2 defense data");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
+    function submitAttackP1Data($gid){
+        global $mysqli;
+        $sql="INSERT INTO `BattleshipP1AttackBoard`(`GameID`) VALUES (?);";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("i",$gid);
+                $stmt->execute();
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while submitting p2 defense data");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
+    function submitAttackP2Data($gid){
+        global $mysqli;
+        $sql="INSERT INTO `BattleshipP2AttackBoard`(`GameID`) VALUES (?);";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("i",$gid);
+                $stmt->execute();
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while submitting p2 defense data");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
+    function getP1DefenseByID($id,$gid){
+        global $mysqli;
+        $sql="SELECT ".$id." FROM `BattleshipP2DefenseBoard` WHERE `GameID`=?";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("i",$gid);
+                $data=returnJson($stmt);
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while getting game by id");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
+    function getP2DefenseByID($id,$gid){
+        global $mysqli;
+        $sql="SELECT ".$id." FROM `BattleshipP1DefenseBoard` WHERE `GameID`=?";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("i",$gid);
+                $data=returnJson($stmt);
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while getting game by id");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
+    function switchTurnData($d,$gid){
+        global $mysqli;
+        $sql="UPDATE `BattleshipGameInfo` SET `turn`=? WHERE `GameID`=?";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("si",$d,$gid);
+                $stmt->execute();
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while denying someone");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
+    function submitHitP1Data($id,$gid){
+        //update p1 attack board
+        global $mysqli;
+        $sql="UPDATE `BattleshipP1AttackBoard` SET `".$id."`='hit' WHERE `GameID`=?";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("i",$gid);
+                $stmt->execute();
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while denying someone");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
+    function submitHitP2Data($id,$gid){
+        //update p1 attack board
+        global $mysqli;
+        $sql="UPDATE `BattleshipP2AttackBoard` SET `".$id."`='hit' WHERE `GameID`=?";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("i",$gid);
+                $stmt->execute();
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while denying someone");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
+    function submitDamageP2Data($id,$gid){
+        //update p2 defense board
+        global $mysqli;
+        $sql="UPDATE `BattleshipP2DefenseBoard` SET `".$id."`='hit' WHERE `GameID`=?";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("i",$gid);
+                $stmt->execute();
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while denying someone");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
+    function submitDamageP1Data($id,$gid){
+        //update p2 defense board
+        global $mysqli;
+        $sql="UPDATE `BattleshipP1DefenseBoard` SET `".$id."`='hit' WHERE `GameID`=?";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("i",$gid);
+                $stmt->execute();
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while denying someone");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
+    function submitMissP1Data($id,$gid){
+        //update p1 attack board
+        global $mysqli;
+        $sql="UPDATE `BattleshipP1AttackBoard` SET `".$id."`='miss' WHERE `GameID`=?";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("i",$gid);
+                $stmt->execute();
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while denying someone");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
+    function submitMissP2Data($id,$gid){
+        //update p1 attack board
+        global $mysqli;
+        $sql="UPDATE `BattleshipP2AttackBoard` SET `".$id."`='miss' WHERE `GameID`=?";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("i",$gid);
+                $stmt->execute();
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while denying someone");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
+    function submitNoDamageP2Data($id,$gid){
+        //update p2 defense board
+        global $mysqli;
+        $sql="UPDATE `BattleshipP2DefenseBoard` SET `".$id."`='miss' WHERE `GameID`=?";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("i",$gid);
+                $stmt->execute();
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while denying someone");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
+    function submitNoDamageP1Data($id,$gid){
+        //update p2 defense board
+        global $mysqli;
+        $sql="UPDATE `BattleshipP1DefenseBoard` SET `".$id."`='miss' WHERE `GameID`=?";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("i",$gid);
+                $stmt->execute();
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while denying someone");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
+/************i made too many functions*******/
 
-
+    function getP1AttackBoardData($gid){
+        global $mysqli;
+        $sql="SELECT * FROM `BattleshipP1AttackBoard` WHERE `GameID`=?";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("i",$gid);
+                $data=returnJson($stmt);
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while getting online users");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
+    function getP2AttackBoardData($gid){
+        global $mysqli;
+        $sql="SELECT * FROM `BattleshipP2AttackBoard` WHERE `GameID`=?";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("i",$gid);
+                $data=returnJson($stmt);
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while getting online users");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
+    function getP1DefenseBoardData($gid){
+        global $mysqli;
+        $sql="SELECT * FROM `BattleshipP1DefenseBoard` WHERE `GameID`=?";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("i",$gid);
+                $data=returnJson($stmt);
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while getting online users");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
+    function getP2DefenseBoardData($gid){
+        global $mysqli;
+        $sql="SELECT * FROM `BattleshipP2DefenseBoard` WHERE `GameID`=?";
+        try{
+            if($stmt=$mysqli->prepare($sql)){
+                $stmt->bind_param("i",$gid);
+                $data=returnJson($stmt);
+                $mysqli->close();
+                return $data;
+            }else{
+                throw new Exception("An error occurred while getting online users");
+            }
+        }catch (Exception $e) {
+            log_error($e, $sql, null);
+            return false;
+        }
+    }
 
 
 
